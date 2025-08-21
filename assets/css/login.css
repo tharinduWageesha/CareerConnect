@@ -1,0 +1,164 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+/* Left Panel */
+.left-panel {
+    flex: 1;
+    background: url('../images/3dbanner.png') no-repeat center center/cover;
+    position: relative;
+}
+
+.left-panel .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+}
+
+/* Right Panel */
+.right-panel {
+    flex: 1;
+    background: #fff;
+    padding: 50px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.right-panel h2 {
+    margin-bottom: 20px;
+    font-size: 28px;
+}
+
+/* ====== FORM CONTAINER STYLE ====== */
+.form-container {
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    background: rgb(252, 255, 255);
+    padding: 30px 25px;
+    border-radius: 12px;
+    box-shadow: 8px 28px 25px rgba(0, 0, 0, 0.15);
+    transition: transform 0.2s ease-in-out;
+}
+
+.form-container:hover {
+    transform: translateY(-5px);
+}
+
+/* Headings */
+.form-container h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 26px;
+    font-weight: 600;
+}
+
+/* Labels */
+.form-container label {
+    display: block;
+    font-size: 14px;
+    color: #444;
+    margin-bottom: 6px;
+    font-weight: 500;
+}
+
+/* Inputs */
+.form-container input[type="text"],
+.form-container input[type="email"],
+.form-container input[type="password"] {
+    width: 100%;
+    padding: 12px 14px;
+    margin-bottom: 18px;
+    border: 1px solid #5c5c5c;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: 0.3s;
+    background-color: #e8eaeb;
+}
+
+.form-container input:focus {
+    outline: none;
+    border-color: #040404;
+    box-shadow: 0 0 8px rgba(128, 0, 255, 0.3);
+    background-color: #f6fdff;
+}
+
+/* Buttons */
+.form-container button {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 25px;
+    background: linear-gradient(90deg, #ff0080, #8000ff);
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s ease-in-out;
+    font-weight: 600;
+}
+
+.form-container button:hover {
+    opacity: 0.9;
+    transform: scale(1.02);
+}
+
+/* Error message */
+.form-container .error {
+    background: #ffe6e6;
+    color: #ff817c;
+    padding: 8px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    text-align: center;
+    font-size: 14px;
+}
+
+/* Link text */
+.form-container p {
+    text-align: center;
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.form-container a {
+    color: #8000ff;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.form-container a:hover {
+    text-decoration: underline;
+}
+/* ====== H2 STYLES ====== */
+h2 {
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    color: #333;
+    margin-bottom: 25px;
+    position: relative;
+}
+
+/* Add a colored underline effect */
+h2::after {
+    content: "";
+    display: block;
+    width: 60px;
+    height: 3px;
+    background: linear-gradient(90deg, #ff0080, #8000ff);
+    margin: 10px auto 0;
+    border-radius: 2px;
+}
