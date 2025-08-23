@@ -20,7 +20,7 @@ $name = $user['full_name'];
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>CareerConnect - Home</title>
+    <title>CareerConnect - Hom</title>
    <link rel="stylesheet" href="assets/css/home.css">
 </head>
 <body>
