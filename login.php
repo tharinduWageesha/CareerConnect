@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CareerConnect - Login</title>
+    <title>CareerConnect - fucku</title>
     <link rel="stylesheet" href="assets/css/login.css">
 </head>
 <body>
@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="right-panel">
         
         <div class="form-container">
-            <h2>Sign In</h2>
+            <h2>register</h2>
             <form method="post">
                 <label for="username">Username:</label>
                 <input type="text" name="username" required>
