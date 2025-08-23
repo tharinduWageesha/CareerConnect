@@ -22,7 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CareerConnect - register</title>
+    <title>CareerConnect - fucku</title>
     <link rel="stylesheet" href="assets/css/login.css">
 </head>
 <body>
