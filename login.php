@@ -36,7 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="right-panel">
         
         <div class="form-container">
-            <h2>Sign In</h2>
+            <h2>register</h2>
             <form method="post">
                 <label for="username">Username:</label>
                 <input type="text" name="username" required>
