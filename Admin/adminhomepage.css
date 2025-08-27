@@ -174,3 +174,28 @@ header {
                 font-size: 0.9rem;
             }
         }
+             table {
+  width: 80%;
+  margin: 20px auto;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  text-align: center;
+}
+
+button {
+  padding: 8px 15px;
+  margin: 5px;
+  background-color: #87ceeb;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #00aaff;
+}
