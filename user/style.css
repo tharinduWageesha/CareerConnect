@@ -67,14 +67,80 @@ nav {
   display: flex;
   align-items: center;
 }
+.hero_fj {
+  background: #AEC7D5;
+  padding: 120px 2rem 4rem;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  }
+
+.avlb{
+   margin-bottom: 2rem;
+   text-align: center;
+}
+
+.avlb h1 {
+  font-size: 5rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin-bottom: 1.5rem;
+  color:white;
+  }
+
+.job_container  {
+  max-width: 800px;
+  width: 80%;
+  margin: 0 auto;
+  text-align: center;
+  color: white;
+      
+}
+.job_container h2{
+  font-size: 2rem;
+
+}
+
+.job_container p{
+  font-size: 1.5rem;
+  color:#d1e9f5;
+}
+
+
+
+
+.job-card {
+  background: #4E6E7E;
+  padding:30px;
+  margin: 20px 0;
+  border-radius: 20px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  align-items: center;
+}
+.btn-apply {
+  background: #253b46;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  margin-top: 15px;
+  transition: all 0.3s ease;
+  }
+    
+  .btn-apply:hover {
+    background: #83A2B2;
+  }
 
 .container {
   max-width: 1200px;
-  margin: auto;
   display: grid;
+  margin:auto;
   grid-template-columns: 1fr 1fr; /* two-column */
   gap: 2rem;
-  align-items: center;
+  align-items:center;
 }
 
 .hero-content {
@@ -110,7 +176,6 @@ nav {
 
 .cta-buttons {
   display: flex;
-  gap: 1rem;
   margin-bottom: 2rem;
 }
 
@@ -198,6 +263,7 @@ nav {
   }
   .nav-links {
     display: none;
+
   }
   .hero-images {
     grid-template-columns: 1fr;
@@ -206,4 +272,34 @@ nav {
   .cta-buttons {
     justify-content: center;
   }
+
 }
+ 
+    .search-bar {
+      max-width: 600px;
+      width: 60%;
+      margin: 20px auto;
+      display: flex;
+      gap: 10px;
+    }
+    .search-bar input {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+    .search-bar button {
+      background: #1e313a;
+      color: #fff;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+    }
+    
+    .search-bar button:hover {
+      background: #71c8f4;
+    }
