@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $password = password_hash($_POST['password'], PASSWORD_DEFAULT); 
 
     // Prepare an SQL INSERT statement to prevent SQL injection
-    $stmt = $conn->prepare("INSERT INTO companies (name, email, password) VALUES (?, ?, ?)");
+    $stmt = $conn->prepare("INSERT INTO companies (name, email,industry,location,) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $name, $email, $password);
 
     // Execute the statement and check for success

@@ -54,20 +54,20 @@ $conn->close();
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Edit Employee</title>
+    <title>Edit Company</title>
     <link rel="stylesheet" href="adminhomepage.css">
 </head>
 <body>
-    <h2 style="text-align:center; margin:20px 0;">Edit Employee</h2>
+    <h2 style="text-align:center; margin:20px 0;">Edit Company</h2>
     <form action="edit_company.php" method="post" style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #ddd; border-radius: 8px;">
-        <input type="hidden" name="id" value="<?php echo $employee['id']; ?>">
+        <input type="hidden" name="id" value="<?php echo $company['id']; ?>">
         <div class="form-group">
             <label for="name">Name:</label>
-            <input type="text" id="name" name="name" value="<?php echo $employee['name']; ?>" required>
+            <input type="text" id="name" name="name" value="<?php echo $company['name']; ?>" required>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
-            <input type="email" id="email" name="email" value="<?php echo $employee['email']; ?>" required>
+            <input type="email" id="email" name="email" value="<?php echo $company['email']; ?>" required>
         </div>
         <div class="form-group">
             <label for="password">New Password (optional):</label>
