@@ -1,3 +1,4 @@
+<?php include 'db.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -18,8 +19,8 @@
       </div>
       <ul class="nav-links">
       <li><a href="adminhomepage.php">Home</a></li>
-     <li><a href="manage_employees.html">Manage Employees</a></li>
-     <li><a href="manage_companies.html">Manage Companies</a></li>
+     <li><a href="manage_employees.php">Manage Employees</a></li>
+     <li><a href="manage_companies.php">Manage Companies</a></li>
      <li><a href="help.html">Help</a></li>
      <li><a href="my_account.html">My Account</a></li>
 
@@ -37,16 +38,26 @@
         <th>Email</th>
         <th>Actions</th>
       </tr>
-      <!-- Example row -->
-      <tr>
-        <td>1</td>
-        <td>John Doe</td>
-        <td>john@example.com</td>
-        <td>
-          <button>Edit</button>
-          <button>Delete</button>
-        </td>
-      </tr>
+       <?php
+        $sql = "SELECT * FROM users";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "<tr>
+                    <td>".$row['id']."</td>
+                    <td>".$row['name']."</td>
+                    <td>".$row['email']."</td>
+                    <td>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </td>
+                </tr>";
+            }
+        } else {
+            echo "<tr><td colspan='4'>No employees found</td></tr>";
+        }
+        ?>
     </table>
     <div style="text-align:center; margin:20px;">
       <button>Add Employee</button>
