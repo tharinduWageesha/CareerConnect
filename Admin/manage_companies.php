@@ -62,7 +62,7 @@
         ?>
     </table>
     <div style="text-align:center; margin:20px;">
-        <button>Add a company</button>
+        <button onclick="window.location.href='add_company.php'">Add a company</button>
     </div>
 </main>
 </body>
