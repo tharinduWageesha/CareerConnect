@@ -19,7 +19,7 @@
             </div>
         </div>
         <ul class="nav-links">
-            <li><a href="admin_home.php">Home</a></li>
+            <li><a href="adminhomepage.php">Home</a></li>
             <li><a href="manage_employees.php">Manage Employees</a></li>
             <li><a href="manage_companies.php">Manage Companies</a></li>
             <li><a href="help.html">Help</a></li>

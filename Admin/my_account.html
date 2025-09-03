@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Employees</title>
+  <title>My Account - CareerConnect</title>
   <link rel="stylesheet" href="adminhomepage.css">
 </head>
 <body>
@@ -27,17 +27,33 @@
     </nav>
   </header>
 
- 
-<main>
-  <h2 style="text-align:center; margin:20px 0;">My Account</h2>
-  <p style="text-align:center;">Admin Name: John Admin</p>
-  <p style="text-align:center;">Email: admin@example.com</p>
-  <div style="text-align:center; margin:20px;">
-    <button>Edit Profile</button>
-  </div>
-</main>
+  <main>
+    <h2 style="text-align:center; margin:20px 0;">My Account</h2>
+    
+    <div class="account-card">
+      <div class="account-avatar">
+        <i class="fas fa-user"></i>
+      </div>
+      <div class="account-detail">
+        <strong>Admin Name:</strong> John Admin
+      </div>
+      <div class="account-detail">
+        <strong>Email:</strong> admin@example.com
+      </div>
+      <div class="account-detail">
+        <strong>Role:</strong> Administrator
+      </div>
+      <div class="account-detail">
+        <strong>Last Login:</strong> Today at 10:30 AM
+      </div>
+      <div style="margin-top:20px;">
+        <button>Edit Profile</button>
+        <button>Change Password</button>
+      </div>
+    </div>
+  </main>
 
- 
- 
+  <!-- Add Font Awesome for icons -->
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </body>
 </html>
