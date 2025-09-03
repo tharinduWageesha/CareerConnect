@@ -6,14 +6,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $_POST['email'];
     $username = $_POST['username'];
     $password = $_POST['password'];
+    $account_type = $_POST['account_type'];
 
-    // Insert new user into database
     $sql = "INSERT INTO users (username, password, role, full_name, email)
-            VALUES ('$username', '$password', 'USER', '$full_name', '$email')";
+            VALUES ('$username', '$password', '$account_type', '$full_name', '$email')";
 
     if (mysqli_query($conn, $sql)) {
-        // redirect to login instead of homepage (better UX)
-        header("Location: homepage.php");
+        if ($account_type == 'Company') {
+            header("Location: Company\companyhomepage.php");
+         } else if( $account_type == 'Admin') {
+             header("Location: Admin\adminhomepage.php");
+         }else {
+             header("Location: User\userhomepage.html");
+        }
         exit();
     } else {
         $error = "Error: " . mysqli_error($conn);
@@ -39,22 +44,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="form-container">
             <h2>Sign Up</h2>
             <form method="POST">
-                <label>Full Name</label>
-                <input type="text" name="full_name" required>
+                <div class="form-group">
+                    <label for="full_name">Employee / Company Name</label>
+                    <input type="text" id="full_name" name="full_name" required>
+                </div>
 
-                <label>Email</label>
-                <input type="email" name="email" required>
+                <div class="form-group">
+                    <div class="radio-group">
+                        <label>Account Type</label>
+                        <div class="radio-option">
+                            <input type="radio" id="employee" name="account_type" value="USER" required>
+                            <label for="employee">Employee</label>
+                        </div>
+                        <div class="radio-option">
+                            <input type="radio" id="company" name="account_type" value="Company" required>
+                            <label for="company">Company</label>
+                        </div>
+                    </div>
+                </div>
 
-                <label>Username</label>
-                <input type="text" name="username" required>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
 
-                <label>Password</label>
-                <input type="password" name="password" required>
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
 
-                <button type="submit">Register</button>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+
+                <button type="submit" class="submit-btn">Register</button>
+                
                 <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
 
-                <p>Already have an account? <a href="login.php">Login</a></p>
+                <p class="login-link">Already have an account? <a href="login.php">Login</a></p>
             </form>
         </div>
     </div>

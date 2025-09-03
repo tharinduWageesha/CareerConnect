@@ -10,19 +10,27 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $result = mysqli_query($conn, $sql);
 
    if (mysqli_num_rows($result) == 1) {
-      $_SESSION['username'] = $username;
-      header("Location: homepage.php"); // redirect after login
-      exit();
-   } else {
-      $error = "Invalid username or password!";
-   }
+    $row = mysqli_fetch_assoc($result);
+    
+    $_SESSION['username'] = $username;
+    if ($row['role'] == 'Company') {
+        header("Location: Company\companyhomepage.php");
+    } else if( $row['role'] == 'Admin') {
+        header("Location: Admin\adminhomepage.php");
+    }else {
+        header("Location: User\userhomepage.html");
+    }
+    exit();
+} else {
+    $error = "Invalid Username or Password!";
+}
 }
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-    <title>CareerConnect - fucku</title>
+    <title>CareerConnect - Login</title>
     <link rel="stylesheet" href="assets/css/login.css">
 </head>
 <body>
@@ -36,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="right-panel">
         
         <div class="form-container">
-            <h2>register</h2>
+            <h2>Log In</h2>
             <form method="post">
                 <label for="username">Username:</label>
                 <input type="text" name="username" required>

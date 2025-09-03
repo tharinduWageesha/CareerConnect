@@ -20,3 +20,19 @@ window.addEventListener('scroll', function() {
     header.style.backdropFilter = 'none';
   }
 });
+
+  //search bar
+    function searchJobs() {
+      let input = document.getElementById("searchInput").value.toLowerCase();
+      let jobs = document.getElementsByClassName("job-card");
+
+      for (let i = 0; i < jobs.length; i++) {
+        let jobTitle = jobs[i].getElementsByTagName("h3")[0].innerText.toLowerCase();
+        if (jobTitle.includes(input)) {
+          jobs[i].style.display = "block";  // show
+        } else {
+          jobs[i].style.display = "none";   // hide
+        }
+      }
+    }
+
