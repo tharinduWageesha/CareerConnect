@@ -1,3 +1,26 @@
+<?php
+// 1. Include the database connection
+include 'db.php';
+
+// 2. Fetch data for the dashboard stats
+// Fetch total users
+$userResult = $conn->query("SELECT COUNT(*) as total FROM users");
+$totalUsers = $userResult->fetch_assoc()['total'];
+
+// Fetch total companies (using the new 'companies' table)
+$companyResult = $conn->query("SELECT COUNT(*) as total FROM companies");
+$totalCompanies = $companyResult->fetch_assoc()['total'];
+
+// Fetch total job listings
+$jobResult = $conn->query("SELECT COUNT(*) as total FROM jobs");
+$totalJobs = $jobResult->fetch_assoc()['total'];
+
+// Fetch total applications
+$applicationResult = $conn->query("SELECT COUNT(*) as total FROM applications");
+$totalApplications = $applicationResult->fetch_assoc()['total'];
+
+$conn->close();
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,7 +84,6 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
   <header>
     <nav>
       <div class="logo">
@@ -77,41 +99,37 @@
         <li><a href="manage_employees.php">Manage Employees</a></li>
         <li><a href="manage_companies.php">Manage Companies</a></li>
         <li><a href="help.html">Help</a></li>
-        <li><a href="my_account.html">My Account</a></li>
+        <li><a href="my_account.php">My Account</a></li>
         <button onclick="window.location.href='../login.php'">Log Out</button>
       </ul>
     </nav>
   </header>
   
-  <!-- Banner Section - Fixed image path -->
   <div class="banner-container">
-    <!-- Make sure the filename matches exactly what's in your folder -->
     <img src="../assets/images/bannerimg.jpg" alt="CareerConnect Banner">
   </div>
   
-  <!-- Welcome Section -->
   <div class="welcome-section">
     <h1>Welcome to Admin Dashboard</h1>
     <p>Manage your platform efficiently with the tools below</p>
   </div>
   
-  <!-- Dashboard Stats -->
   <div class="dashboard-stats">
     <div class="stat-card">
       <h3>Total Users</h3>
-      <p>1,254</p>
+      <p><?php echo $totalUsers; ?></p>
     </div>
     <div class="stat-card">
       <h3>Companies</h3>
-      <p>342</p>
+      <p><?php echo $totalCompanies; ?></p>
     </div>
     <div class="stat-card">
       <h3>Job Listings</h3>
-      <p>568</p>
+      <p><?php echo $totalJobs; ?></p>
     </div>
     <div class="stat-card">
       <h3>Applications</h3>
-      <p>2,145</p>
+      <p><?php echo $totalApplications; ?></p>
     </div>
   </div>
 

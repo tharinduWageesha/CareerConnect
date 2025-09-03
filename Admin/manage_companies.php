@@ -5,7 +5,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Manage Employees</title>
+    <title>Manage Companies</title>
     <link rel="stylesheet" href="adminhomepage.css">
 </head>
 <body>
@@ -23,14 +23,14 @@
             <li><a href="manage_employees.php">Manage Employees</a></li>
             <li><a href="manage_companies.php">Manage Companies</a></li>
             <li><a href="help.html">Help</a></li>
-            <li><a href="my_account.html">My Account</a></li>
+            <li><a href="my_account.php">My Account</a></li>
             <button onclick="window.location.href='../login.php'">Log Out</button>
         </ul>
     </nav>
 </header>
 
 <main>
-    <h2 style="text-align:center; margin:20px 0;">Manage companies</h2>
+    <h2 style="text-align:center; margin:20px 0;">Manage Companies</h2>
     <table>
         <tr>
             <th>ID</th>
@@ -39,7 +39,8 @@
             <th>Actions</th>
         </tr>
         <?php
-        $sql = "SELECT * FROM jobs";
+        // CORRECTED: Query the 'companies' table instead of 'jobs'
+        $sql = "SELECT id, name, email FROM companies";
         $result = $conn->query($sql);
 
         if ($result->num_rows > 0) {
@@ -55,8 +56,9 @@
                 </tr>";
             }
         } else {
-            echo "<tr><td colspan='4'>No jobs found</td></tr>";
+            echo "<tr><td colspan='4'>No companies found</td></tr>";
         }
+        $conn->close();
         ?>
     </table>
     <div style="text-align:center; margin:20px;">
