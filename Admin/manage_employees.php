@@ -32,12 +32,15 @@
   <main>
     <h2 style="text-align:center; margin:20px 0;">Manage Employees</h2>
     <table>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Actions</th>
-      </tr>
+     <tr>
+    <td><?php echo $row['id']; ?></td>
+    <td><?php echo $row['name']; ?></td>
+    <td><?php echo $row['email']; ?></td>
+    <td>
+        <a href="edit_employee.php?id=<?php echo $row['id']; ?>" class="edit-btn">Edit</a>
+        <a href="delete_employee.php?id=<?php echo $row['id']; ?>" class="delete-btn" onclick="return confirm('Are you sure you want to delete this employee?');">Delete</a>
+    </td>
+</tr>
        <?php
         $sql = "SELECT * FROM users";
         $result = $conn->query($sql);
