@@ -1,67 +1,18 @@
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-  line-height: 1.6;
-}
-  /* Header */
-header {
-  background: white;
-  padding: 0.5rem 2rem;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 1000;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.5rem;
-  font-weight: 700;
-  color:#3a515d ;
-}
-
-.tagline {
-  font-size: 0.7rem;
-  color:#83A2B2;
-  font-weight: 400;
-}
-
-.nav-links {
-  display: flex;
-  gap: 2rem;
-  list-style: none;
-}
-
-.nav-links a {
-  text-decoration: none;
-  color: #666;
-  font-weight: 500;
-  transition: color 0.3s ease;
-}
-
-.nav-links a:hover { color:#83A2B2; }
-
 /* Hero Section */
 .hero {
   background: linear-gradient(135deg,#AEC7D5 0%, #eaf2f7 100%);
   color: white;
-  padding: 80px 2rem 20rem;
+  padding: 80px 2rem 2rem;
   min-height: 100vh;
   display: flex;
   align-items: center;
 }
-
+.active{
+            background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
+        }
 .container {
   max-width: 1200px;
   margin: 0 auto;
@@ -156,3 +107,246 @@ nav {
 .hero-content > *:nth-child(3) { animation-delay: 0.2s; }
 .hero-content > *:nth-child(4) { animation-delay: 0.3s; }
 .hero-content > *:nth-child(5) { animation-delay: 0.4s; }
+
+
+/* About Section */
+        .about-section {
+            padding: 50px 20px;
+            background: linear-gradient(135deg,#ffffff 0%, #e6f1f8 100%);
+            margin: 20px 0;
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .about-header h2 {
+            font-size: 36px;
+            color: black;
+            margin-bottom: 10px;
+        }
+
+        .about-subtitle {
+            font-size: 18px;
+            color: #87ceeb;
+            margin-bottom: 40px;
+        }
+
+        .about-text {
+            max-width: 800px;
+            margin: 0 auto 50px;
+        }
+
+        .lead-text {
+            font-size: 18px;
+            color: #333;
+            line-height: 1.6;
+            margin-bottom: 40px;
+        }
+
+        /* Mission and Vision */
+        .mission-vision {
+            display: flex;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .mission, .vision {
+            flex: 1;
+            text-align: left;
+            padding: 30px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+            border-left: 5px solid #87ceeb;
+        }
+
+        .mission h3, .vision h3 {
+            color: black;
+            font-size: 22px;
+            margin-bottom: 15px;
+        }
+
+        .mission p, .vision p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        /* Stats Section */
+        .about-stats {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin-bottom: 50px;
+        }
+
+        .stat-card {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .stat-number {
+            font-size: 48px;
+            font-weight: bold;
+            color: #87ceeb;
+            margin-bottom: 10px;
+        }
+
+        .stat-label {
+            color: black;
+            font-weight: 500;
+        }
+
+        /* Features Grid */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 30px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .feature-card:hover {
+            background-color: #87ceeb;
+            color: white;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card h4 {
+            color: black;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .feature-card:hover h4 {
+            color: white;
+        }
+
+        .feature-card p {
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .feature-card:hover p {
+            color: white;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            nav {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .nav-links {
+                gap: 15px;
+            }
+
+            .mission-vision {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .about-stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+/* Footer Styles */
+footer {
+    background-color:#83A2B2;
+    color: white;
+    padding: 40px 0 20px;
+    margin-top: 50px;
+}
+
+.footer-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-bottom: 30px;
+}
+
+.footer-section h3 {
+    color: #ffffff;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
+
+.footer-section p,
+.footer-section li {
+    color: #e5f7ff;
+    line-height: 1.6;
+    margin-bottom: 10px;
+}
+
+.footer-section ul {
+    list-style: none;
+}
+
+.footer-section a {
+    color: #e5f7ff;
+    text-decoration: none;
+}
+
+.footer-section a:hover {
+    color: #87ceeb;
+}
+
+.social-links {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+
+.social-links a {
+    background-color: #333;
+    color: white;
+    padding: 10px;
+    border-radius: 50%;
+    text-decoration: none;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.social-links a:hover {
+    background-color: #87ceeb;
+}
+
+.footer-bottom {
+    border-top: 1px solid #333;
+    padding-top: 20px;
+    text-align: center;
+}
+
+.footer-bottom p {
+    color: #dfdfdf;
+    margin: 0;
+}
