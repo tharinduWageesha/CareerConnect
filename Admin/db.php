@@ -1,7 +1,11 @@
 <?php
-$servername = "localhost"; // XAMPP default
-$username = "root";        // XAMPP default username
-$password = "";            // XAMPP default password is empty
+// Enable error reporting for development
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+$servername = "localhost";
+$username = "root";
+$password = "";
 $dbname = "careerconnect_db";
 
 // Create connection

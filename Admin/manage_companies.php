@@ -24,7 +24,7 @@
             <li><a href="manage_companies.php">Manage Companies</a></li>
             <li><a href="help.html">Help</a></li>
             <li><a href="my_account.php">My Account</a></li>
-            <button onclick="window.location.href='../login.php'">Log Out</button>
+            <li><button onclick="window.location.href='../login.php'">Log Out</button></li>
         </ul>
     </nav>
 </header>
@@ -39,27 +39,27 @@
             <th>Actions</th>
         </tr>
         <?php
-        // CORRECTED: Query the 'companies' table instead of 'jobs'
-        $sql = "SELECT id, name, email FROM companies";
-        $result = $conn->query($sql);
+$sql = "SELECT id, name, email FROM companies";
+$result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
-            while($row = $result->fetch_assoc()) {
-                echo "<tr>
-                    <td>".$row['id']."</td>
-                    <td>".$row['name']."</td>
-                    <td>".$row['email']."</td>
-                    <td>
-                        <button>Edit</button>
-                        <button>Delete</button>
-                    </td>
-                </tr>";
-            }
-        } else {
-            echo "<tr><td colspan='4'>No companies found</td></tr>";
-        }
-        $conn->close();
-        ?>
+if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
+        echo "<tr>
+            <td>".$row['id']."</td>
+            <td>".$row['name']."</td>
+            <td>".$row['email']."</td>
+            <td>
+               <a href='edit_company.php?id=".$row['id']."'><button>Edit</button></a>
+               <a href='delete_company.php?id=".$row['id']."'><button>Delete</button></a>
+            </td>
+        </tr>";
+    }
+} else {
+    echo "<tr><td colspan='4'>No companies found</td></tr>";
+}
+$conn->close();
+?>
+
     </table>
     <div style="text-align:center; margin:20px;">
         <button onclick="window.location.href='add_company.php'">Add a company</button>

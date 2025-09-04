@@ -84,26 +84,25 @@ $conn->close();
   </style>
 </head>
 <body>
-  <header>
+<header>
     <nav>
-      <div class="logo">
-        <img src="../assets/images/logo2.png" height="50" width="50">
-        <div>
-          <strong>CareerConnect</strong>
-          <div class="tagline">Connecting Careers, Building Futures.</div>
+        <div class="logo">
+            <img src="../assets/images/logo2.png" height="50" width="50">
+            <div>
+                <strong>CareerConnect</strong>
+                <div class="tagline">Connecting Careers, Building Futures.</div>
+            </div>
         </div>
-      </div>
-      
-      <ul class="nav-links">
-        <li><a href="adminhomepage.php">Home</a></li>
-        <li><a href="manage_employees.php">Manage Employees</a></li>
-        <li><a href="manage_companies.php">Manage Companies</a></li>
-        <li><a href="help.html">Help</a></li>
-        <li><a href="my_account.php">My Account</a></li>
-        <button onclick="window.location.href='../login.php'">Log Out</button>
-      </ul>
+        <ul class="nav-links">
+            <li><a href="adminhomepage.php">Home</a></li>
+            <li><a href="manage_employees.php">Manage Employees</a></li>
+            <li><a href="manage_companies.php">Manage Companies</a></li>
+            <li><a href="help.html">Help</a></li>
+            <li><a href="my_account.php">My Account</a></li>
+            <li><button onclick="window.location.href='../login.php'">Log Out</button></li>
+        </ul>
     </nav>
-  </header>
+</header>
   
   <div class="banner-container">
     <img src="../assets/images/bannerimg.jpg" alt="CareerConnect Banner">
