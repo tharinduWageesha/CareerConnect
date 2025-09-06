@@ -10,21 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
    $result = mysqli_query($conn, $sql);
 
    if (mysqli_num_rows($result) == 1) {
-    $row = mysqli_fetch_assoc($result);
-    
-    $_SESSION['username'] = $username;
-    if ($row['role'] == 'Company') {
-        header("Location: Company\companyhomepage.php");
-    } else if( $row['role'] == 'Admin') {
-        header("Location: Admin\adminhomepage.php");
-    }else {
-        header("Location: User\userhomepage.html");
-    }
-    exit();
-} else {
-    $error = "Invalid Username or Password!";
+        $row = mysqli_fetch_assoc($result);
+
+        $_SESSION['username'] = $username;
+
+        if ($row['role'] == 'Company') {
+            $_SESSION['companyName'] = $row['username']; // ✅ company name = username
+            header("Location: Company/companyhomepage.php");
+            exit();
+        } elseif ($row['role'] == 'Admin') {
+            header("Location: Admin/adminhomepage.php");
+            exit();
+        } else {
+            header("Location: User/userhomepage.php");
+            exit();
+        }
+   } else {
+        $error = "Invalid Username or Password!";
+   }
 }
-}
+
 ?>
 
 <!DOCTYPE html>
@@ -53,7 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 <input type="password" name="password" required>
 
                 <button type="submit">Login</button>
-                <?php if (isset($error)) echo "<p class='error'>$error</p>"; ?>
+                <?php if (isset($error)) { echo "<p class='error'>$error</p>"; } ?>
                 <p>Don't have an account? <a href="register.php">Sign Up</a></p>
             </form>
         </div>

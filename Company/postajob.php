@@ -1,28 +1,55 @@
 <?php
-require_once '../includes/config.php';
+require '../includes/config.php';
+$statusMessage = "";
 
-// Check if request is POST
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // Sanitize input
-    $jobTitle   = $conn->real_escape_string($_POST['jobTitle']);
-    $company    = $conn->real_escape_string($_POST['company']);
-    $location   = $conn->real_escape_string($_POST['location']);
-    $jobType    = $conn->real_escape_string($_POST['jobType']);
-    $salary     = $conn->real_escape_string($_POST['salary']);
-    $experience = $conn->real_escape_string($_POST['experience']);
-    $description= $conn->real_escape_string($_POST['description']);
+// Handle Job Posting
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $job_title = $_POST['jobTitle'] ?? null;
+    $comp_name = $_POST['company'] ?? null;
+    $location  = $_POST['location'] ?? null;
+    $job_type  = $_POST['jobType'] ?? null;
+    $sal_range = $_POST['salary'] ?? null;
+    $exp_lvl   = $_POST['experience'] ?? null;
+    $job_desc  = $_POST['description'] ?? null;
 
-    // Insert query
-    $sql = "INSERT INTO jobs (jobTitle, company, location, jobType, salary, experience, description, created_at)
-            VALUES ('$jobTitle', '$company', '$location', '$jobType', '$salary', '$experience', '$description', NOW())";
-
-    if ($conn->query($sql)) {
-        echo json_encode(["status" => "success", "message" => "Job posted successfully!"]);
+    if ($job_title && $comp_name && $location && $job_type && $exp_lvl && $job_desc) {
+        $sql = "INSERT INTO jobs (jobTitle, company, location, jobType, salary, experience, description)
+                VALUES ('$job_title', '$comp_name', '$location', '$job_type', '$sal_range', '$exp_lvl', '$job_desc')";
+        if (mysqli_query($conn, $sql)) {
+            echo "<script>alert('✅ Job posted successfully!'); window.location.href='postajob.php';</script>";
+            exit;
+        } else {
+            echo "<script>alert('❌ Error: " . mysqli_error($conn) . "');</script>";
+        }
     } else {
-        echo json_encode(["status" => "error", "message" => "Error: " . $conn->error]);
+        echo "<script>alert('⚠️ Please fill all required fields.');</script>";
+    }
+}
+
+// Handle Delete Job
+if (isset($_GET['delete'])) {
+    $deleteId = intval($_GET['delete']); // secure
+    $deleteQuery = "DELETE FROM jobs WHERE id = $deleteId";
+    if (mysqli_query($conn, $deleteQuery)) {
+        echo "<script>alert('🗑️ Job deleted successfully!'); window.location.href='postajob.php';</script>";
+        exit;
+    } else {
+        echo "<script>alert('❌ Error deleting job: " . mysqli_error($conn) . "');</script>";
+    }
+}
+
+// Fetch jobs by company (latest first)
+$companyName = $_SESSION['companyName']; 
+$jobs = [];
+$query = "SELECT * FROM jobs WHERE company = '$companyName' ORDER BY id DESC";
+$result = mysqli_query($conn, $query);
+if ($result && mysqli_num_rows($result) > 0) {
+    while ($row = mysqli_fetch_assoc($result)) {
+        $jobs[] = $row;
     }
 }
 ?>
+
 
 
 
@@ -393,27 +420,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 flex-direction: column;
             }
         }
-
-        /* Success Message */
-        .success-message {
-            background-color: #d4edda;
-            color: #155724;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-            display: none;
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            color: #721c24;
-            padding: 15px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            border: 1px solid #f5c6cb;
-            display: none;
-        }
         
 /* Footer Styles */
 footer {
@@ -513,7 +519,7 @@ footer {
         <li><a href="companyhomepage.php">Home</a></li>
         <li><a href="postajob.php" class="active">Post a Job</a></li>
         <li><a href="viewapplications.php">View Applications</a></li>
-        <li><a href="#people">Help</a></li>
+        <li><a href="helpcompage.php">Help</a></li>
         <li><a href="myaccountpage.php">My Account</a></li>
         <button onclick="window.location.href='../login.php'">Log Out</button>
       </ul>
@@ -530,14 +536,14 @@ footer {
             <div id="successMessage" class="success-message"></div>
             <div id="errorMessage" class="error-message"></div>
 
-            <form id="jobForm">
+            <form id="jobForm" method="POST" action="">
                 <div class="form-group">
                     <label for="jobTitle">Job Title *</label>
                     <input type="text" id="jobTitle" name="jobTitle" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="company">Company Name *</label>
+                    <label for="company">Company Username *</label>
                     <input type="text" id="company" name="company" required>
                 </div>
 
@@ -559,8 +565,8 @@ footer {
                 </div>
 
                 <div class="form-group">
-                    <label for="salary">Salary Range</label>
-                    <input type="text" id="salary" name="salary" placeholder="e.g., $50,000 - $70,000">
+                    <label for="salary">Salary Range (Rs.)</label>
+                    <input type="text" id="salary" name="salary" placeholder="e.g., Rs 150,000 - Rs 170,000">
                 </div>
 
                 <div class="form-group">
@@ -580,6 +586,7 @@ footer {
                 </div>
 
                 <button type="submit" class="btn-primary" id="submitBtn">Post Job</button>
+                <?php if (isset($statusquey)) echo "<p class='error'>$statusquey</p>"; ?>
             </form>
         </div>
 
@@ -587,10 +594,33 @@ footer {
         <div class="job-list-section">
             <h2 class="section-title">Your Posted Jobs</h2>
             <div id="jobList">
-                <div class="no-jobs">
-                    No jobs posted yet. Create your first job posting!
-                </div>
+        <?php if (empty($jobs)) { ?>
+            <div class="no-jobs">
+                No jobs posted yet. Create your first job posting!
             </div>
+        <?php } else { ?>
+            <?php foreach ($jobs as $job) { ?>
+                <div class="job-card">
+                    <h3><?php echo htmlspecialchars($job['jobTitle']); ?></h3>
+                    <div class="job-info">
+                        <strong>Company:</strong> <?php echo htmlspecialchars($job['company']); ?><br>
+                        <strong>Location:</strong> <?php echo htmlspecialchars($job['location']); ?><br>
+                        <strong>Type:</strong> <?php echo htmlspecialchars($job['jobType']); ?><br>
+                        <strong>Experience:</strong> <?php echo htmlspecialchars($job['experience']); ?><br>
+                        <strong>Salary:</strong> <?php echo htmlspecialchars($job['salary']); ?>
+                    </div>
+                    <p class="job-description"><?php echo nl2br(htmlspecialchars($job['description'])); ?></p>
+                    <div class="job-actions">
+                        <a href="postajob.php?delete=<?php echo $job['id']; ?>"
+                           class="btn-delete"
+                           onclick="return confirm('Are you sure you want to delete this job?');">
+                           Delete
+                        </a>
+                    </div>
+                </div>
+            <?php } ?>
+        <?php } ?>
+    </div>
         </div>
     </div>
 
@@ -633,32 +663,5 @@ footer {
             </div>
         </div>
     </footer>
-
-<script>
-         document.getElementById("jobForm").addEventListener("submit", function(e) {
-           e.preventDefault();
-
-         const formData = new FormData(this);
-
-         fetch("post_job.php", {
-             method: "POST",
-             body: formData
-          })
-         .then(response => response.json())
-         .then(data => {
-        if (data.status === "success") {
-            document.getElementById("successMessage").innerText = data.message;
-            document.getElementById("errorMessage").innerText = "";
-            document.getElementById("jobForm").reset();
-        } else {
-            document.getElementById("errorMessage").innerText = data.message;
-            document.getElementById("successMessage").innerText = "";
-        }
-    })
-    .catch(err => {
-        document.getElementById("errorMessage").innerText = "Something went wrong!";
-    });
-});
-</script>
 </body>
 </html>

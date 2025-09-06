@@ -1,3 +1,40 @@
+<?php
+require_once '../includes/config.php';
+
+// Fetch statistics
+function getCount($conn, $sql) {
+    $result = $conn->query($sql);
+    if (!$result) {
+        die("SQL Error: " . $conn->error);
+    }
+    return $result->fetch_row()[0];
+}
+
+$totapp = getCount($conn, "SELECT COUNT(*) FROM applications WHERE username = '" . $_SESSION['companyName'] . "'");
+$accapp  = getCount($conn, "SELECT COUNT(*) FROM applications WHERE username = '" . $_SESSION['companyName'] . "' AND status = 'accepted'");
+$pendapp = getCount($conn, "SELECT COUNT(*) FROM applications WHERE username = '" . $_SESSION['companyName'] . "' AND status = 'pending'");
+$rejapp  = getCount($conn, "SELECT COUNT(*) FROM applications WHERE username = '" . $_SESSION['companyName'] . "' AND status = 'rejected'");
+
+// Handle status update (Accept/Reject)
+if (isset($_POST['action'], $_POST['application_id'])) {
+    $appId = intval($_POST['application_id']);
+    $newStatus = $_POST['action'] === 'accept' ? 'accepted' : 'rejected';
+
+    $stmt = $conn->prepare("UPDATE applications SET status = ? WHERE application_id = ?");
+    $stmt->bind_param("si", $newStatus, $appId);
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect back after update
+    header("Location: viewapplications.php");
+    exit();
+}
+$companyName = $_SESSION['companyName']; 
+// Fetch all applications
+$apps = $conn->query("SELECT * FROM applications Where username = '" . $_SESSION['companyName'] . "' ORDER BY applied_at DESC");
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -217,61 +254,6 @@
         .page-title p {
             color: #87ceeb;
             font-size: 18px;
-        }
-
-        /* Filter Section */
-        .filter-section {
-            background-color: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-        }
-
-        .filter-row {
-            display: flex;
-            gap: 20px;
-            align-items: end;
-        }
-
-        .filter-group {
-            flex: 1;
-        }
-
-        .filter-group label {
-            display: block;
-            color: black;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .filter-group select,
-        .filter-group input {
-            width: 100%;
-            padding: 10px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
-            font-size: 16px;
-        }
-
-        .filter-group select:focus,
-        .filter-group input:focus {
-            border-color: #87ceeb;
-            outline: none;
-        }
-
-        .btn-filter {
-            background-color: #87ceeb;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-filter:hover {
-            background-color: #5dade2;
         }
 
         /* Applications Summary */
@@ -616,7 +598,7 @@ footer {
             <li><a href="companyhomepage.php">Home</a></li>
              <li><a href="postajob.php">Post a Job</a></li>
              <li><a href="viewapplications.php" class="active">View Applications</a></li>
-             <li><a href="#people">Help</a></li>
+             <li><a href="helpcompage.php">Help</a></li>
              <li><a href="myaccountpage.php">My Account</a></li>
             <button onclick="window.location.href='../login.php'">Log Out</button>
         </ul>
@@ -631,58 +613,22 @@ footer {
             <p>Manage applications for your job postings</p>
         </div>
         
-        <!-- Success/Error Messages -->
-        <div id="successMessage" class="message success-message"></div>
-        <div id="errorMessage" class="message error-message"></div>
-
-        <!-- Filter Section -->
-        <div class="filter-section">
-            <div class="filter-row">
-                <div class="filter-group">
-                    <label for="jobFilter">Filter by Job</label>
-                    <select id="jobFilter">
-                        <option value="">All Jobs</option>
-                        <option value="Software Developer">Software Developer</option>
-                        <option value="Marketing Manager">Marketing Manager</option>
-                        <option value="Data Analyst">Data Analyst</option>
-                        <option value="UI/UX Designer">UI/UX Designer</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="statusFilter">Filter by Status</label>
-                    <select id="statusFilter">
-                        <option value="">All Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="accepted">Accepted</option>
-                        <option value="rejected">Rejected</option>
-                    </select>
-                </div>
-                <div class="filter-group">
-                    <label for="dateFilter">Filter by Date</label>
-                    <input type="date" id="dateFilter">
-                </div>
-                <div class="filter-group">
-                    <button class="btn-filter" onclick="filterApplications()">Filter</button>
-                </div>
-            </div>
-        </div>
-
         <!-- Summary Cards -->
         <div class="summary-section">
             <div class="summary-card">
-                <div class="summary-number" id="totalApplications">24</div>
+                <div class="summary-number" id="totalApplications"><?php echo $totapp; ?></div>
                 <div class="summary-label">Total Applications</div>
             </div>
             <div class="summary-card pending">
-                <div class="summary-number" id="pendingApplications">15</div>
+                <div class="summary-number" id="pendingApplications"><?php echo $pendapp; ?></div>
                 <div class="summary-label">Pending Review</div>
             </div>
             <div class="summary-card accepted">
-                <div class="summary-number" id="acceptedApplications">6</div>
+                <div class="summary-number" id="acceptedApplications"><?php echo $accapp; ?></div>
                 <div class="summary-label">Accepted</div>
             </div>
             <div class="summary-card rejected">
-                <div class="summary-number" id="rejectedApplications">3</div>
+                <div class="summary-number" id="rejectedApplications"><?php echo $rejapp; ?></div>
                 <div class="summary-label">Rejected</div>
             </div>
         </div>
@@ -690,157 +636,50 @@ footer {
         <!-- Applications List -->
         <div class="applications-section">
             <div class="section-header">Recent Applications</div>
-            
-            <div id="applicationsList">
-                <!-- Application 1 -->
-                <div class="application-card">
-                    <div class="application-header">
-                        <div class="applicant-info">
-                            <h3>John Smith</h3>
-                            <div class="job-title">Software Developer - Frontend</div>
-                        </div>
-                        <div class="application-status status-pending">Pending</div>
-                    </div>
-                    
-                    <div class="application-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Email:</div>
-                            john.smith@email.com
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Phone:</div>
-                            +1 (555) 123-4567
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Applied Date:</div>
-                            March 15, 2024
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Experience:</div>
-                            3 Years
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Location:</div>
-                            New York, NY
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Expected Salary:</div>
-                            $75,000
-                        </div>
-                    </div>
 
-                    <div class="cover-letter">
-                        <h4>Cover Letter</h4>
-                        <p>I am excited to apply for the Frontend Developer position. With 3 years of experience in React and modern web technologies, I am confident I can contribute effectively to your team...</p>
-                    </div>
+            <?php if ($apps->num_rows > 0): ?>
+                <?php while ($row = $apps->fetch_assoc()): ?>
+                    <div class="application-card">
+                        <div class="application-header">
+                            <div class="applicant-info">
+                                <h3><?php echo $row['Empname']; ?></h3>
+                                <div class="job-title">Job ID: <?php echo $row['job_id']; ?></div>
+                            </div>
+                            <div class="application-status status-<?php echo $row['status']; ?>">
+                                <?php echo ucfirst($row['status']); ?>
+                            </div>
+                        </div>
 
-                    <div class="application-actions">
-                        <button class="btn-action btn-view" onclick="viewResume(1)">View Resume</button>
-                        <button class="btn-action btn-contact" onclick="contactApplicant(1)">Contact</button>
-                        <button class="btn-action btn-accept" onclick="updateStatus(1, 'accepted')">Accept</button>
-                        <button class="btn-action btn-reject" onclick="updateStatus(1, 'rejected')">Reject</button>
-                    </div>
-                </div>
+                        <div class="application-details">
+                            <div class="detail-item"><strong>Email:</strong> <?php echo $row['email']; ?></div>
+                            <div class="detail-item"><strong>Phone:</strong> <?php echo $row['phone']; ?></div>
+                            <div class="detail-item"><strong>Experience:</strong> <?php echo $row['experience']; ?></div>
+                            <div class="detail-item"><strong>Location:</strong> <?php echo $row['location']; ?></div>
+                            <div class="detail-item"><strong>Expected Salary:</strong> <?php echo $row['salary']; ?></div>
+                            <div class="detail-item"><strong>Applied Date:</strong> <?php echo $row['applied_at']; ?></div>
+                        </div>
 
-                <!-- Application 2 -->
-                <div class="application-card">
-                    <div class="application-header">
-                        <div class="applicant-info">
-                            <h3>Sarah Johnson</h3>
-                            <div class="job-title">Marketing Manager</div>
+                        <div class="cover-letter">
+                            <h4>Cover Letter</h4>
+                            <p><?php echo nl2br(htmlspecialchars($row['cover_letter'])); ?></p>
                         </div>
-                        <div class="application-status status-accepted">Accepted</div>
-                    </div>
-                    
-                    <div class="application-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Email:</div>
-                            sarah.johnson@email.com
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Phone:</div>
-                            +1 (555) 987-6543
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Applied Date:</div>
-                            March 12, 2024
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Experience:</div>
-                            5 Years
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Location:</div>
-                            Los Angeles, CA
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Expected Salary:</div>
-                            $90,000
-                        </div>
-                    </div>
 
-                    <div class="cover-letter">
-                        <h4>Cover Letter</h4>
-                        <p>As a marketing professional with 5 years of experience in digital marketing and brand management, I am thrilled to apply for the Marketing Manager position at your company...</p>
-                    </div>
+                        <div class="application-actions">
+                            <?php if ($row['resume_path']): ?>
+                                <a class="btn-action btn-view" href="<?php echo $row['resume_path']; ?>" target="_blank">View Resume</a>
+                            <?php endif; ?>
 
-                    <div class="application-actions">
-                        <button class="btn-action btn-view" onclick="viewResume(2)">View Resume</button>
-                        <button class="btn-action btn-contact" onclick="contactApplicant(2)">Contact</button>
-                        <button class="btn-action btn-reject" onclick="updateStatus(2, 'rejected')">Reject</button>
-                    </div>
-                </div>
-
-                <!-- Application 3 -->
-                <div class="application-card">
-                    <div class="application-header">
-                        <div class="applicant-info">
-                            <h3>Michael Chen</h3>
-                            <div class="job-title">Data Analyst</div>
-                        </div>
-                        <div class="application-status status-pending">Pending</div>
-                    </div>
-                    
-                    <div class="application-details">
-                        <div class="detail-item">
-                            <div class="detail-label">Email:</div>
-                            michael.chen@email.com
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Phone:</div>
-                            +1 (555) 456-7890
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Applied Date:</div>
-                            March 10, 2024
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Experience:</div>
-                            2 Years
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Location:</div>
-                            Chicago, IL
-                        </div>
-                        <div class="detail-item">
-                            <div class="detail-label">Expected Salary:</div>
-                            $65,000
+                            <form method="post" style="display:inline;">
+                                <input type="hidden" name="application_id" value="<?php echo $row['application_id']; ?>">
+                                <button type="submit" name="action" value="accept" class="btn-action btn-accept">Accept</button>
+                                <button type="submit" name="action" value="reject" class="btn-action btn-reject">Reject</button>
+                            </form>
                         </div>
                     </div>
-
-                    <div class="cover-letter">
-                        <h4>Cover Letter</h4>
-                        <p>I am writing to express my interest in the Data Analyst position. With a strong background in statistics and data visualization using Python and SQL...</p>
-                    </div>
-
-                    <div class="application-actions">
-                        <button class="btn-action btn-view" onclick="viewResume(3)">View Resume</button>
-                        <button class="btn-action btn-contact" onclick="contactApplicant(3)">Contact</button>
-                        <button class="btn-action btn-accept" onclick="updateStatus(3, 'accepted')">Accept</button>
-                        <button class="btn-action btn-reject" onclick="updateStatus(3, 'rejected')">Reject</button>
-                    </div>
-                </div>
-            </div>
+                <?php endwhile; ?>
+            <?php else: ?>
+                <div class="no-applications">No applications found.</div>
+            <?php endif; ?>
         </div>
     </div>
     
@@ -883,89 +722,5 @@ footer {
             </div>
         </div>
     </footer>
-    <script>
-        // Sample applications data
-        let applications = [
-            {
-                id: 1,
-                name: "John Smith",
-                job: "Software Developer",
-                email: "john.smith@email.com",
-                phone: "+1 (555) 123-4567",
-                date: "March 15, 2024",
-                experience: "3 Years",
-                location: "New York, NY",
-                salary: "$75,000",
-                status: "pending",
-                coverLetter: "I am excited to apply for the Frontend Developer position. With 3 years of experience in React and modern web technologies, I am confident I can contribute effectively to your team..."
-            }
-        ];
-
-        // Update application status function
-        function updateStatus(applicationId, newStatus) {
-            const statusText = newStatus.charAt(0).toUpperCase() + newStatus.slice(1);
-            
-            if (confirm(`Are you sure you want to ${newStatus === 'accepted' ? 'accept' : 'reject'} this application?`)) {
-                // Find the application card and update status
-                const applicationCard = document.querySelector(`[data-id="${applicationId}"]`);
-                if (applicationCard) {
-                    const statusElement = applicationCard.querySelector('.application-status');
-                    statusElement.textContent = statusText;
-                    statusElement.className = `application-status status-${newStatus}`;
-                }
-                
-                showMessage(`Application ${newStatus === 'accepted' ? 'accepted' : 'rejected'} successfully!`, 'success');
-                updateSummaryCounters();
-            }
-        }
-
-        // View resume function
-        function viewResume(applicationId) {
-            alert(`Opening resume for application ID: ${applicationId}`);
-            // In real application, this would open a PDF viewer or download the resume
-        }
-
-        // Contact applicant function
-        function contactApplicant(applicationId) {
-            alert(`Opening email client to contact applicant ID: ${applicationId}`);
-            // In real application, this would open email client or messaging system
-        }
-
-        // Filter applications function
-        function filterApplications() {
-            const jobFilter = document.getElementById('jobFilter').value;
-            const statusFilter = document.getElementById('statusFilter').value;
-            const dateFilter = document.getElementById('dateFilter').value;
-            
-            // In real application, this would filter the applications based on criteria
-            showMessage('Filters applied successfully!', 'success');
-        }
-
-        // Show message function
-        function showMessage(message, type) {
-            const messageElement = type === 'success' ? 
-                document.getElementById('successMessage') : 
-                document.getElementById('errorMessage');
-            
-            messageElement.textContent = message;
-            messageElement.style.display = 'block';
-            
-            // Hide message after 3 seconds
-            setTimeout(() => {
-                messageElement.style.display = 'none';
-            }, 3000);
-        }
-
-        // Update summary counters function
-        function updateSummaryCounters() {
-            // In real application, this would count from actual data
-            // For now, just updating the display
-        }
-
-        // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
-            // Any initialization code would go here
-        });
-    </script>
 </body>
 </html>

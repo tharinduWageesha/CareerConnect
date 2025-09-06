@@ -1,47 +1,56 @@
 <?php
 require_once '../includes/config.php';
-// Get the logged-in company username from session
-$username = $_SESSION['username'];  
 
-// Fetch company details
-$sql = "SELECT * FROM company_details WHERE username = ?";
+// Check if user logged in
+if (!isset($_SESSION['username'])) {
+    header("Location: ../login.php");
+    exit();
+}
+
+$username = $_SESSION['username'];
+
+// Fetch employee details
+$sql = "SELECT * FROM emp_details WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
+$employee = $result->fetch_assoc();
 
-$company = $result->fetch_assoc();
+// If not found, create a blank row for new users
+if (!$employee) {
+    $conn->query("INSERT INTO emp_details (username, full_name, email_address) 
+                  SELECT username, email FROM users WHERE username = '$username'");
+    $employee = $conn->query("SELECT * FROM emp_details WHERE username = '$username'")->fetch_assoc();
+}
 
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get data from form
-    $username = $_SESSION['companyName']; // Assuming you store company username in session
+// Handle update
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
-    $industry = $_POST['industry'];
-    $company_size = $_POST['company_size'];
-    $founded = $_POST['founded'];
     $email_address = $_POST['email_address'];
     $phone_number = $_POST['phone_number'];
-    $website = $_POST['website'];
+    $education = $_POST['education'];
+    $skills = $_POST['skills'];
+    $experience = $_POST['experience'];
     $location = $_POST['location'];
+    $website = $_POST['website'];
 
-    // Update query
     $stmt = $conn->prepare("
-        UPDATE company_details 
-        SET full_name = ?, industry = ?, company_size = ?, founded = ?, email_address = ?, phone_number = ?, website = ?, location = ?
-        WHERE username = ?
+        UPDATE emp_details 
+        SET full_name=?, email_address=?, phone_number=?, education=?, skills=?, experience=?, location=?, website=?
+        WHERE username=?
     ");
-    $stmt->bind_param("sssssssss", $full_name, $industry, $company_size, $founded, $email_address, $phone_number, $website, $location, $username);
+    $stmt->bind_param("sssssssss", $full_name, $email_address, $phone_number, $education, $skills, $experience, $location, $website, $username);
 
     if ($stmt->execute()) {
-        $stmt->close();
-        header("Location: myaccountpage.php?success=1"); // Redirect back with success
+        header("Location: empaccount.php?success=1");
         exit();
     } else {
-        echo "Error updating: " . $conn->error;
+        echo "Error updating profile: " . $conn->error;
     }
 }
 ?>
+
 
 
 
@@ -517,11 +526,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
       </div>
       
       <ul class="nav-links">
-        <li><a href="companyhomepage.php" >Home</a></li>
-        <li><a href="postajob.php">Post a Job</a></li>
-        <li><a href="viewapplications.php">View Applications</a></li>
-        <li><a href="helpcompage.php">Help</a></li>
-        <li><a href="myaccountpage.php" class="active">My Account</a></li>
+        <li><a href="userhomepage.php">Home</a></li>
+        <li><a href="findajob.php">Find a Job</a></li>
+        <li><a href="myapplications.php">My Applications</a></li>
+        <li><a href="help.php">Help</a></li>
+        <li><a href="myaccount.php"  class="active">My Account</a></li>
         <button onclick="window.location.href='../login.php'">Log Out</button>
       </ul>
 
@@ -544,60 +553,43 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <!-- Profile Summary -->
     <div class="profile-summary">
         <div class="profile-avatar">👤</div>
-        <div class="company-name"><?php echo htmlspecialchars($company['username']); ?></div>
+        <div class="company-name"><?php echo htmlspecialchars($username); ?></div>
     </div>
 
     <!-- Account Details -->
     <div class="account-details">
         <div class="section-header">
-            Company Information
+            User Information
         </div>
 
         <div class="details-content">
             <form method="POST">
-            <div class="details-grid">
-                <div class="detail-group">
-                    <div class="detail-label">Company Name</div>
-                    <div class="detail-value"><input type="text" name="full_name" value="<?php echo htmlspecialchars($company['full_name']); ?>"></div>
-                </div>
+      <label>Full Name</label>
+      <input type="text" name="full_name" value="<?= htmlspecialchars($employee['full_name']); ?>">
 
-                <div class="detail-group">
-                    <div class="detail-label">Industry</div>
-                    <div class="detail-value"><input type="text" name="industry" value="<?php echo htmlspecialchars($company['industry']); ?>"></div>
-                </div>
+      <label>Email Address</label>
+      <input type="email" name="email_address" value="<?= htmlspecialchars($employee['email_address']); ?>">
 
-                <div class="detail-group">
-                    <div class="detail-label">Company Size</div>
-                    <div class="detail-value"><input type="text" name="company_size" value="<?php echo htmlspecialchars($company['company_size']); ?>"></div>
-                </div>
+      <label>Phone Number</label>
+      <input type="text" name="phone_number" value="<?= htmlspecialchars($employee['phone_number']); ?>">
 
-                <div class="detail-group">
-                    <div class="detail-label">Founded</div>
-                    <div class="detail-value"><input type="text" name="founded" value="<?php echo htmlspecialchars($company['founded']); ?>"></div>
-                </div>
+      <label>Education</label>
+      <textarea name="education"><?= htmlspecialchars($employee['education']); ?></textarea>
 
-                <div class="detail-group">
-                    <div class="detail-label">Email Address</div>
-                    <div class="detail-value"><input type="email" name="email_address" value="<?php echo htmlspecialchars($company['email_address']); ?>"></div>
-                </div>
+      <label>Skills</label>
+      <textarea name="skills"><?= htmlspecialchars($employee['skills']); ?></textarea>
 
-                <div class="detail-group">
-                    <div class="detail-label">Phone Number</div>
-                    <div class="detail-value"><input type="text" name="phone_number" value="<?php echo htmlspecialchars($company['phone_number']); ?>"></div>
-                </div>
+      <label>Experience</label>
+      <textarea name="experience"><?= htmlspecialchars($employee['experience']); ?></textarea>
 
-                <div class="detail-group">
-                    <div class="detail-label">Website</div>
-                    <div class="detail-value"><input type="text" name="website" value="<?php echo htmlspecialchars($company['website']); ?>"></div>
-                </div>
+      <label>Location</label>
+      <input type="text" name="location" value="<?= htmlspecialchars($employee['location']); ?>">
 
-                <div class="detail-group">
-                    <div class="detail-label">Location</div>
-                    <div class="detail-value"><input type="text" name="location" value="<?php echo htmlspecialchars($company['location']); ?>"></div>
-                </div>
-            </div>
-            <button class="btn-edit" onclick="editProfile()">Save</button>
-            </form>
+      <label>Website (Portfolio/LinkedIn)</label>
+      <input type="text" name="website" value="<?= htmlspecialchars($employee['website']); ?>">
+
+      <button type="submit">Save Profile</button>
+    </form>
         </div>
     </div>
 </div>

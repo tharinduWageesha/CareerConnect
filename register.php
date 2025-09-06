@@ -8,23 +8,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $account_type = $_POST['account_type'];
 
-    $sql = "INSERT INTO users (username, password, role, full_name, email)
-            VALUES ('$username', '$password', '$account_type', '$full_name', '$email')";
-
-    if (mysqli_query($conn, $sql)) {
-        if ($account_type == 'Company') {
-            header("Location: Company\companyhomepage.php");
-         } else if( $account_type == 'Admin') {
-             header("Location: Admin\adminhomepage.php");
-         }else {
-             header("Location: User\userhomepage.html");
-        }
-        exit();
+    // Insert into users table
+    $stmt = $conn->prepare("INSERT INTO users (username, password, role, full_name, email) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("sssss", $username, $password, $account_type, $full_name, $email);
+    $_SESSION['username'] = $username;
+    if ($stmt->execute()) {
+        $stmt->close();
+         header("Location: login.php");
     } else {
-        $error = "Error: " . mysqli_error($conn);
+        echo "Error: " . $conn->error;
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html>

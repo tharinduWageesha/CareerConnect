@@ -1,7 +1,6 @@
 <?php
 require_once '../includes/config.php';
 
-
 // Fetch statistics
 $countsek = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'USER'")->fetch_row()[0];
 $countcomp = $conn->query("SELECT COUNT(*) FROM users WHERE role = 'Company'")->fetch_row()[0];
@@ -14,9 +13,8 @@ $countjob = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Outer Web - Start Your Career</title>
-  <link rel="stylesheet" href="companyhoempage.css">
-  <link rel="stylesheet" href="company/style.css">
+  <title>CareerConnect - User</title>
+  <link rel="stylesheet" href="userhomepage.css">
 </head>
 <body>
   <!-- Header -->
@@ -31,11 +29,11 @@ $countjob = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
       </div>
       
       <ul class="nav-links">
-        <li><a href="companyhomepage.php" class="active">Home</a></li>
-        <li><a href="postajob.php">Post a Job</a></li>
-        <li><a href="viewapplications.php">View Applications</a></li>
-        <li><a href="helpcompage.php">Help</a></li>
-        <li><a href="myaccountpage.php">My Account</a></li>
+        <li><a href="userhomepage.php" class="active">Home</a></li>
+        <li><a href="findajob.php">Find a Job</a></li>
+        <li><a href="myapplications.php">My Applications</a></li>
+        <li><a href="help.php">Help</a></li>
+        <li><a href="myaccount.php">My Account</a></li>
         <button onclick="window.location.href='../login.php'">Log Out</button>
       </ul>
 
@@ -47,10 +45,10 @@ $countjob = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
    <section class="hero">
     <div class="container">
       <div class="hero-content">
-        <div class="welcome-text">-  Welcome to company page -</div>
+        <div class="welcome-text">-  Welcome to Employee page -</div>
         
         <h1 class="hero-title">
-          Discover Top Employers with 
+          Find Your Dream Job on
           <span class="accent">Career Connect</span>
         </h1>
         
@@ -67,21 +65,21 @@ $countjob = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
       <div class="hero-images">
         <div class="image-card">
           <div>
-            <img src="company/emloyer3.jpg" height="537" width="400">
+            <img src="img/caimg.avif" height="537" width="400">
             Happy Professional<br>
             <small>Strengthen partnerships</small>
           </div>
         </div>
         <div class="image-card">
           <div>
-             <img src="company/employer4.avif" height="200" width="300">
+             <img src="img/istockphoto-1365412652-612x612.jpg" height="200" width="300">
             Well-being Employers<br>
             <small>Maximizing Productivity</small>
           </div>
         </div>
         <div class="image-card">
           <div>
-            <img src="company/epploye5.jpg" height="200" width="300">
+            <img src="img/istockphoto-1927881398-612x612.jpg" height="200" width="300">
             Peak performance when required<br>
             <small>Maintain punctuality</small>
           </div>
