@@ -57,7 +57,7 @@ $countjob = $conn->query("SELECT COUNT(*) FROM jobs")->fetch_row()[0];
         </p>
         
         <div class="cta-buttons">
-          <a href="myaccountpage.php" class="btn btn-primary">Your profile</a>
+          <a href="myaccount.php" class="btn btn-primary">Your profile</a>
           <a href="#about" class="btn btn-outline">About us</a>
         </div>
       </div>

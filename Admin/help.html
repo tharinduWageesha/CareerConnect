@@ -3,11 +3,134 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Manage Employees</title>
+  <title>Help - CareerConnect Admin</title>
   <link rel="stylesheet" href="adminhomepage.css">
+  <link rel="stylesheet" href="../includes/navfooter.css">
+  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
+  <style>
+    .help-container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+    }
+    
+    .help-section {
+      background: white;
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    
+    .help-section h3 {
+      color: #2d3748;
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      border-left: 4px solid #87ceeb;
+      padding-left: 1rem;
+    }
+    
+    .help-item {
+      margin-bottom: 1.5rem;
+      padding: 1rem;
+      background: #f8fafc;
+      border-radius: 8px;
+      border-left: 3px solid #87ceeb;
+    }
+    
+    .help-item h4 {
+      color: #1a202c;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+    
+    .help-item p, .help-item li {
+      color: #4a5568;
+      line-height: 1.6;
+    }
+    
+    .help-item ul {
+      margin-left: 1rem;
+      margin-top: 0.5rem;
+    }
+    
+    .warning-box {
+      background: #fff3cd;
+      border: 1px solid #ffc107;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .warning-box h4 {
+      color: #856404;
+      margin-bottom: 0.5rem;
+    }
+    
+    .warning-box p {
+      color: #856404;
+      margin: 0;
+    }
+    
+    .success-box {
+      background: #d4edda;
+      border: 1px solid #28a745;
+      border-radius: 8px;
+      padding: 1rem;
+      margin: 1rem 0;
+    }
+    
+    .success-box h4 {
+      color: #155724;
+      margin-bottom: 0.5rem;
+    }
+    
+    .success-box p {
+      color: #155724;
+      margin: 0;
+    }
+    
+    .keyboard-shortcut {
+      background: #e2e8f0;
+      padding: 0.2rem 0.5rem;
+      border-radius: 4px;
+      font-family: monospace;
+      font-weight: bold;
+    }
+    
+    .faq-item {
+      margin-bottom: 1rem;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 1rem;
+    }
+    
+    .faq-question {
+      font-weight: bold;
+      color: #2d3748;
+      margin-bottom: 0.5rem;
+    }
+    
+    .faq-answer {
+      color: #4a5568;
+    }
+
+    .navigation-help {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .nav-card {
+      background: #f8fafc;
+      padding: 1rem;
+      border-radius: 8px;
+      border-left: 3px solid #5dade2;
+    }
+  </style>
 </head>
 <body>
- <header>
+  <header>
     <nav>
         <div class="logo">
             <img src="../assets/images/logo2.png" height="50" width="50">
@@ -20,24 +143,312 @@
             <li><a href="adminhomepage.php">Home</a></li>
             <li><a href="manage_employees.php">Manage Employees</a></li>
             <li><a href="manage_companies.php">Manage Companies</a></li>
-            <li><a href="help.html">Help</a></li>
+            <li><a href="help.html" class="active">Help</a></li>
             <li><a href="my_account.php">My Account</a></li>
             <li><button onclick="window.location.href='../login.php'">Log Out</button></li>
         </ul>
     </nav>
-</header>
+  </header>
 
- 
- <main>
-  <h2 style="text-align:center; margin:20px 0;">Help</h2>
-  <ul style="margin: 20px;">
-    <li>To add an employee, click "Add Employee".</li>
-    <li>To edit a company, click "Edit" in the Actions column.</li>
-    <li>Use the "Log Out" button to safely exit.</li>
-  </ul>
-</main>
+  <main class="help-container">
+    <h2 style="text-align:center; margin-bottom: 2rem; color: #2d3748;">CareerConnect Admin Help Center</h2>
+    
+    <!-- Getting Started Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+      <div class="help-item">
+        <h4>Dashboard Overview</h4>
+        <p>The main dashboard displays key statistics about your system including total users, companies, job listings, and applications. Use this page to get a quick overview of your platform's performance.</p>
+      </div>
+      
+      <div class="navigation-help">
+        <div class="nav-card">
+          <h4><i class="fas fa-home"></i> Home</h4>
+          <p>Main dashboard with system statistics and overview</p>
+        </div>
+        <div class="nav-card">
+          <h4><i class="fas fa-users"></i> Manage Employees</h4>
+          <p>View, add, edit, and delete employee accounts</p>
+        </div>
+        <div class="nav-card">
+          <h4><i class="fas fa-building"></i> Manage Companies</h4>
+          <p>View, add, edit, and delete company profiles</p>
+        </div>
+        <div class="nav-card">
+          <h4><i class="fas fa-user-circle"></i> My Account</h4>
+          <p>View and edit your admin profile information</p>
+        </div>
+      </div>
+    </div>
 
- 
- 
+    <!-- Employee Management Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-users"></i> Managing Employees</h3>
+      
+      <div class="help-item">
+        <h4>Adding a New Employee</h4>
+        <p>To add a new employee to the system:</p>
+        <ul>
+          <li>Click on "Manage Employees" in the navigation menu</li>
+          <li>Click the green "Add New Employee" button at the bottom</li>
+          <li>Fill in all required fields: Name, Email, and Password</li>
+          <li>Click "Save Employee" to create the account</li>
+        </ul>
+        
+        <div class="warning-box">
+          <h4><i class="fas fa-exclamation-triangle"></i> Important Notes</h4>
+          <p>Email addresses must be unique. If you try to add an employee with an existing email, the system will show an error.</p>
+        </div>
+      </div>
+      
+      <div class="help-item">
+        <h4>Editing Employee Information</h4>
+        <p>To modify an existing employee's details:</p>
+        <ul>
+          <li>Go to "Manage Employees"</li>
+          <li>Find the employee in the table</li>
+          <li>Click the green "Edit" button in the Actions column</li>
+          <li>Modify the information as needed</li>
+          <li>Leave the password field empty to keep the current password</li>
+          <li>Click "Update Employee" to save changes</li>
+        </ul>
+      </div>
+      
+      <div class="help-item">
+        <h4>Deleting Employees</h4>
+        <p>To remove an employee from the system:</p>
+        <ul>
+          <li>Navigate to "Manage Employees"</li>
+          <li>Find the employee you want to remove</li>
+          <li>Click the red "Delete" button</li>
+          <li>Confirm the deletion in the popup dialog</li>
+        </ul>
+        
+        <div class="warning-box">
+          <h4><i class="fas fa-exclamation-triangle"></i> Warning</h4>
+          <p>Deleting an employee is permanent and cannot be undone. Make sure you really want to remove this account before confirming.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Company Management Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-building"></i> Managing Companies</h3>
+      
+      <div class="help-item">
+        <h4>Adding a New Company</h4>
+        <p>To register a new company:</p>
+        <ul>
+          <li>Click "Manage Companies" in the navigation</li>
+          <li>Click "Add a company" button</li>
+          <li>Fill in all company details:
+            <ul>
+              <li>Company Name</li>
+              <li>Email Address</li>
+              <li>Industry</li>
+              <li>Location</li>
+              <li>Password for company login</li>
+            </ul>
+          </li>
+          <li>Click "Save Company" to add to the system</li>
+        </ul>
+      </div>
+      
+      <div class="help-item">
+        <h4>Editing Company Information</h4>
+        <p>To update company details:</p>
+        <ul>
+          <li>Go to "Manage Companies"</li>
+          <li>Click "Edit" next to the company you want to modify</li>
+          <li>Update the required fields</li>
+          <li>Leave password blank to keep existing password</li>
+          <li>Click "Update Company" to save</li>
+        </ul>
+      </div>
+      
+      <div class="help-item">
+        <h4>Removing Companies</h4>
+        <p>To delete a company profile:</p>
+        <ul>
+          <li>Navigate to "Manage Companies"</li>
+          <li>Click "Delete" next to the company</li>
+          <li>Confirm the deletion when prompted</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Account Management Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-user-cog"></i> Account Management</h3>
+      
+      <div class="help-item">
+        <h4>Viewing Your Profile</h4>
+        <p>Click "My Account" to view your admin profile information including name, email, role, and last login time.</p>
+      </div>
+      
+      <div class="help-item">
+        <h4>Editing Your Profile</h4>
+        <p>To update your admin account:</p>
+        <ul>
+          <li>Go to "My Account"</li>
+          <li>Click "Edit Profile" button</li>
+          <li>Modify your name or email address</li>
+          <li>Optionally enter a new password</li>
+          <li>Click "Update Profile" to save changes</li>
+        </ul>
+      </div>
+      
+      <div class="help-item">
+        <h4>Changing Your Password</h4>
+        <p>For security reasons, regularly update your password:</p>
+        <ul>
+          <li>Access "My Account" → "Edit Profile"</li>
+          <li>Enter your new password in the password field</li>
+          <li>Leave blank if you don't want to change it</li>
+          <li>Save the changes</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Security Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-shield-alt"></i> Security & Best Practices</h3>
+      
+      <div class="help-item">
+        <h4>Password Security</h4>
+        <p>Follow these guidelines for secure passwords:</p>
+        <ul>
+          <li>Use at least 8 characters</li>
+          <li>Include uppercase and lowercase letters</li>
+          <li>Add numbers and special characters</li>
+          <li>Avoid common words or personal information</li>
+          <li>Change passwords regularly</li>
+        </ul>
+      </div>
+      
+      <div class="help-item">
+        <h4>Safe Logout</h4>
+        <p>Always use the "Log Out" button when finished to ensure your session is properly closed and protect your account from unauthorized access.</p>
+      </div>
+      
+      <div class="success-box">
+        <h4><i class="fas fa-check-circle"></i> Security Features</h4>
+        <p>The system automatically protects against common security threats including SQL injection and cross-site scripting (XSS) attacks.</p>
+      </div>
+    </div>
+
+    <!-- Frequently Asked Questions -->
+    <div class="help-section">
+      <h3><i class="fas fa-question-circle"></i> Frequently Asked Questions</h3>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q: What happens if I enter a duplicate email address?</div>
+        <div class="faq-answer">A: The system will display an error message as email addresses must be unique for both employees and companies.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q: Can I recover deleted employees or companies?</div>
+        <div class="faq-answer">A: No, deletions are permanent. Always double-check before confirming a deletion.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q: Why don't I see a "Cancel" button on edit forms?</div>
+        <div class="faq-answer">A: Use your browser's back button or click on the navigation menu to return to the previous page without saving changes.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q: Can employees and companies have the same email address?</div>
+        <div class="faq-answer">A: No, email addresses must be unique across the entire system to prevent login conflicts.</div>
+      </div>
+      
+      <div class="faq-item">
+        <div class="faq-question">Q: How do I know if changes were saved successfully?</div>
+        <div class="faq-answer">A: The system will redirect you back to the management page and display a success message when changes are saved.</div>
+      </div>
+    </div>
+
+    <!-- Troubleshooting Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-tools"></i> Troubleshooting</h3>
+      
+      <div class="help-item">
+        <h4>Common Issues and Solutions</h4>
+        
+        <div style="margin-bottom: 1rem;">
+          <strong>Problem:</strong> Page doesn't load or shows database error
+          <br><strong>Solution:</strong> Check your internet connection and try refreshing the page. If the problem persists, contact your system administrator.
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <strong>Problem:</strong> Can't add new employee/company
+          <br><strong>Solution:</strong> Ensure all required fields are filled and the email address isn't already in use.
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <strong>Problem:</strong> Delete confirmation popup doesn't appear
+          <br><strong>Solution:</strong> Make sure JavaScript is enabled in your browser.
+        </div>
+        
+        <div style="margin-bottom: 1rem;">
+          <strong>Problem:</strong> Form submission fails
+          <br><strong>Solution:</strong> Check that all required fields are completed and try again.
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Section -->
+    <div class="help-section">
+      <h3><i class="fas fa-envelope"></i> Need More Help?</h3>
+      <div class="help-item">
+        <h4>Contact Support</h4>
+        <p>If you need additional assistance or encounter issues not covered in this help guide, please contact your system administrator or technical support team.</p>
+        
+        <div class="success-box">
+          <h4><i class="fas fa-lightbulb"></i> Pro Tips</h4>
+          <p>Bookmark this help page for quick reference. You can always return here using the "Help" link in the navigation menu.</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CareerConnect</h3>
+                    <p>We help people find great jobs and help companies find great employees. Join thousands of successful job seekers who found their dream careers with us.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Instagram">📷</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="companyhomepage.php">Home</a></li>
+                        <li><a href="postajob.php">Post Jobs</a></li>
+                        <li><a href="viewapplications.php">Applications</a></li>
+                        <li><a href="helpcom.php">Help</a></li>
+                        <li><a href="myaccountpage.php">My Account</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📧 Email: info@careerconnect.com</p>
+                    <p>📞 Phone: +94 81 233 3233</p>
+                    <p>📍 Address: CareerCon, Cross Street, Colombo, Srilanka<br>Job City, JC 12345</p>
+                    <p>🕒 Mon - Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CareerConnect. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

@@ -1,6 +1,6 @@
 <?php 
 // Connect to database
-include 'db.php'; 
+require_once '../includes/config.php';
 
 // Check if there's a success/error message to show
 $message = '';
@@ -21,6 +21,7 @@ if (isset($_GET['success'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Manage Employees - CareerConnect</title>
     <link rel="stylesheet" href="adminhomepage.css">
+    <link rel="stylesheet" href="../includes/navfooter.css">
     <style>
         /* Simple message styling */
         .message {
@@ -53,7 +54,7 @@ if (isset($_GET['success'])) {
     </style>
 </head>
 <body>
-    <!-- Navigation (same as before) -->
+    <!-- Navigation -->
     <header>
         <nav>
             <div class="logo">
@@ -65,7 +66,7 @@ if (isset($_GET['success'])) {
             </div>
             <ul class="nav-links">
                 <li><a href="adminhomepage.php">Home</a></li>
-                <li><a href="manage_employees.php">Manage Employees</a></li>
+                <li><a href="manage_employees.php" class="active">Manage Employees</a></li>
                 <li><a href="manage_companies.php">Manage Companies</a></li>
                 <li><a href="help.html">Help</a></li>
                 <li><a href="my_account.php">My Account</a></li>
@@ -91,7 +92,7 @@ if (isset($_GET['success'])) {
                     <th>ID</th>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Phone</th>
+                    <th>Username</th>
                     <th>Joined Date</th>
                     <th>Actions</th>
                 </tr>
@@ -99,25 +100,25 @@ if (isset($_GET['success'])) {
             <tbody>
                 <?php
                 // Get all employees from database
-                $sql = "SELECT id, name, email, phone, created_at FROM users ORDER BY created_at DESC";
+                $sql = "SELECT * FROM users Where role = 'user' ORDER BY created_at DESC";
                 $result = $conn->query($sql);
 
                 if ($result && $result->num_rows > 0) {
-                    // Show each employee in a table row
                     while($row = $result->fetch_assoc()) {
                         echo "<tr>
-                            <td>" . $row['id'] . "</td>
-                            <td>" . htmlspecialchars($row['name']) . "</td>
+                            <td>" . $row['user_id'] . "</td>
+                            <td>" . htmlspecialchars($row['full_name']) . "</td>
                             <td>" . htmlspecialchars($row['email']) . "</td>
-                            <td>" . htmlspecialchars($row['phone'] ?? 'Not provided') . "</td>
+                            <td>" . htmlspecialchars($row['username'] ?? 'Not provided') . "</td>
                             <td>" . date('M d, Y', strtotime($row['created_at'])) . "</td>
                             <td>
-                                <a href='edit_employee.php?id=" . $row['id'] . "'>
+                                <a href='edit_employee.php?id=" . $row['user_id'] . "'>
                                     <button class='edit'>Edit</button>
                                 </a>
-                                <button class='delete' onclick=\"confirmDelete('employee', " . $row['id'] . ")\">
+                                <button class='delete' onclick=\"confirmDelete('employee', " . $row['user_id'] . ")\">
                                     Delete
                                 </button>
+
                             </td>
                         </tr>";
                     }
@@ -137,8 +138,45 @@ if (isset($_GET['success'])) {
             </button>
         </div>
     </main>
-
-    <!-- Include JavaScript for delete confirmations -->
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CareerConnect</h3>
+                    <p>We help people find great jobs and help companies find great employees. Join thousands of successful job seekers who found their dream careers with us.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Instagram">📷</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="companyhomepage.php">Home</a></li>
+                        <li><a href="postajob.php">Post Jobs</a></li>
+                        <li><a href="viewapplications.php">Applications</a></li>
+                        <li><a href="helpcom.php">Help</a></li>
+                        <li><a href="myaccountpage.php">My Account</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📧 Email: info@careerconnect.com</p>
+                    <p>📞 Phone: +94 81 233 3233</p>
+                    <p>📍 Address: CareerCon, Cross Street, Colombo, Srilanka<br>Job City, JC 12345</p>
+                    <p>🕒 Mon - Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CareerConnect. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
     <script src="confirm_delete.js"></script>
 </body>
 </html>

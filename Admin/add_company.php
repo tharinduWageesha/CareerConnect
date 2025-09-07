@@ -1,33 +1,21 @@
 <?php
-// Start session and check authentication
-session_start();
-if (!isset($_SESSION['admin_id'])) {
-    header("Location: ../login.php");
-    exit();
-}
-
-// Check if the form has been submitted
+require_once '../includes/config.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    include 'db.php'; // Include the database connection
 
-    // Get data from the form and sanitize it
-    $name = htmlspecialchars($_POST['name']);
+    $name = htmlspecialchars($_POST['full_name']);
     $email = htmlspecialchars($_POST['email']);
-    $industry = htmlspecialchars($_POST['industry']);
-    $location = htmlspecialchars($_POST['location']);
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+    $username = htmlspecialchars($_POST['username']);
+    $password = htmlspecialchars($_POST['password']); 
+    $role = 'Company';
 
-    // Prepare an SQL INSERT statement to prevent SQL injection
-    $stmt = $conn->prepare("INSERT INTO companies (name, email, industry, location, password) VALUES (?, ?, ?, ?, ?)");
-    $stmt->bind_param("sssss", $name, $email, $industry, $location, $password);
+    $stmt = $conn->prepare("INSERT INTO users (full_name,email,username,password,role) VALUES (?, ?, ?,?,?)");
+    $stmt->bind_param("sssss", $name, $email, $username, $password, $role);
 
-    // Execute the statement and check for success
     if ($stmt->execute()) {
-        // Redirect back to the manage companies page on success
         header("Location: manage_companies.php");
         exit();
     } else {
-        $error = "Error: " . $stmt->error;
+        echo "Error: " . $stmt->error;
     }
 
     $stmt->close();
@@ -40,11 +28,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add Company - CareerConnect</title>
+    <title>Add Employee</title>
     <link rel="stylesheet" href="adminhomepage.css">
+    <link rel="stylesheet" href="../includes/navfooter.css">
 </head>
 <body>
-<header>
 <header>
     <nav>
         <div class="logo">
@@ -57,7 +45,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <ul class="nav-links">
             <li><a href="adminhomepage.php">Home</a></li>
             <li><a href="manage_employees.php">Manage Employees</a></li>
-            <li><a href="manage_companies.php">Manage Companies</a></li>
+            <li><a href="manage_companies.php"  class="active">Manage Companies</a></li>
             <li><a href="help.html">Help</a></li>
             <li><a href="my_account.php">My Account</a></li>
             <li><button onclick="window.location.href='../login.php'">Log Out</button></li>
@@ -68,40 +56,66 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <main>
     <h2 style="text-align:center; margin:20px 0;">Add a New Company</h2>
     
-    <?php if (isset($error)): ?>
-        <div style="color: red; text-align: center; margin: 10px 0;"><?php echo $error; ?></div>
-    <?php endif; ?>
-    
-    <form action="add_company.php" method="post" class="form-container">
+    <form action="add_company.php" method="post" style="max-width: 500px; margin: 20px auto; padding: 20px; border: 1px solid #000000ff; border-radius: 8px;">
         <div class="form-group">
-            <label for="name">Company Name:</label>
-            <input type="text" id="name" name="name" required>
+            <label for="full_name">Company name:</label>
+            <input type="text" id="full_name" name="full_name" required>
         </div>
         <div class="form-group">
             <label for="email">Email:</label>
             <input type="email" id="email" name="email" required>
         </div>
         <div class="form-group">
-            <label for="industry">Industry:</label>
-            <input type="text" id="industry" name="industry" required>
-        </div>
-        <div class="form-group">
-            <label for="location">Location:</label>
-            <input type="text" id="location" name="location" required>
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" required>
         </div>
         <div class="form-group">
             <label for="password">Password:</label>
             <input type="password" id="password" name="password" required>
         </div>
         <div style="text-align:center;">
-            <button type="submit">Save Company</button>
-            <button type="button" onclick="window.location.href='manage_companies.php'">Cancel</button>
+            <button type="submit">Save Employee</button>
         </div>
     </form>
 </main>
-
-<footer style="text-align: center; padding: 20px; margin-top: 30px;">
-    <p>&copy; 2023 CareerConnect. All rights reserved.</p>
-</footer>
+<footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CareerConnect</h3>
+                    <p>We help people find great jobs and help companies find great employees. Join thousands of successful job seekers who found their dream careers with us.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Instagram">📷</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="companyhomepage.php">Home</a></li>
+                        <li><a href="postajob.php">Post Jobs</a></li>
+                        <li><a href="viewapplications.php">Applications</a></li>
+                        <li><a href="helpcom.php">Help</a></li>
+                        <li><a href="myaccountpage.php">My Account</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📧 Email: info@careerconnect.com</p>
+                    <p>📞 Phone: +94 81 233 3233</p>
+                    <p>📍 Address: CareerCon, Cross Street, Colombo, Srilanka<br>Job City, JC 12345</p>
+                    <p>🕒 Mon - Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CareerConnect. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>

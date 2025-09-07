@@ -8,18 +8,33 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $_POST['password'];
     $account_type = $_POST['account_type'];
 
-    // Insert into users table
     $stmt = $conn->prepare("INSERT INTO users (username, password, role, full_name, email) VALUES (?, ?, ?, ?, ?)");
     $stmt->bind_param("sssss", $username, $password, $account_type, $full_name, $email);
-    $_SESSION['username'] = $username;
+    
     if ($stmt->execute()) {
+        $_SESSION['username'] = $username;
         $stmt->close();
-         header("Location: login.php");
+
+        if ($account_type == 'Company') {
+            $stmt2 = $conn->prepare("INSERT INTO company_details (username, full_name, email_address) VALUES (?, ?, ?)");
+            $stmt2->bind_param("sss", $username, $full_name, $email);
+            $stmt2->execute();
+            $stmt2->close();
+        } else if ($account_type == 'USER') {
+            $stmt2 = $conn->prepare("INSERT INTO emp_details (username, full_name, email_address) VALUES (?, ?, ?)");
+            $stmt2->bind_param("sss", $username, $full_name, $email);
+            $stmt2->execute();
+            $stmt2->close();
+        }
+
+        header("Location: login.php");
+        exit();
     } else {
         echo "Error: " . $conn->error;
     }
 }
 ?>
+
 
 
 <!DOCTYPE html>

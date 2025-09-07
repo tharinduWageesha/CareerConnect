@@ -1,9 +1,8 @@
 <?php
 require_once '../includes/config.php';
-// Get the logged-in company username from session
+
 $username = $_SESSION['username'];  
 
-// Fetch company details
 $sql = "SELECT * FROM company_details WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
@@ -12,10 +11,8 @@ $result = $stmt->get_result();
 
 $company = $result->fetch_assoc();
 
-
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Get data from form
-    $username = $_SESSION['companyName']; // Assuming you store company username in session
+    $username = $_SESSION['companyName'];
     $full_name = $_POST['full_name'];
     $industry = $_POST['industry'];
     $company_size = $_POST['company_size'];
@@ -25,7 +22,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $website = $_POST['website'];
     $location = $_POST['location'];
 
-    // Update query
     $stmt = $conn->prepare("
         UPDATE company_details 
         SET full_name = ?, industry = ?, company_size = ?, founded = ?, email_address = ?, phone_number = ?, website = ?, location = ?
@@ -35,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     if ($stmt->execute()) {
         $stmt->close();
-        header("Location: myaccountpage.php?success=1"); // Redirect back with success
+        header("Location: myaccountpage.php?success=1");
         exit();
     } else {
         echo "Error updating: " . $conn->error;
@@ -43,566 +39,107 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 }
 ?>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Account - CareerConnect</title>
-    <style>
-        /* Basic Reset */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f5f5f5;
-            
-        }
-       header {
-            background: linear-gradient(135deg, #ffffff 0%, #f1f5f9 100%);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border-bottom: 2px solid #87ceeb;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1rem 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            transition: transform 0.3s ease;
-        }
-
-        .logo:hover {
-            transform: scale(1.02);
-        }
-
-        .logo img {
-            height: 70px;
-            width: 70px;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.3);
-            transition: all 0.3s ease;
-        }
-
-        .logo img:hover {
-            box-shadow: 0 6px 20px rgba(135, 206, 235, 0.5);
-            transform: rotate(5deg);
-        }
-
-        .logo div strong {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1a202c;
-            letter-spacing: -0.5px;
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .tagline {
-            font-size: 0.9rem;
-            color: #5f9ab1;
-            font-weight: 500;
-            margin-top: 2px;
-            font-style: italic;
-        }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            align-items: center;
-            gap: 2rem;
-        }
-
-        .nav-links li a {
-            text-decoration: none;
-            color: #1a202c;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 0.7rem 1.2rem;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .nav-links li a::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(135, 206, 235, 0.2), transparent);
-            transition: left 0.6s ease;
-        }
-
-        .nav-links li a:hover::before {
-            left: 100%;
-        }
-
-        .nav-links li a:hover {
-            background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
-        }
-
-        .nav-links button {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
-            color: white;
-            border: none;
-            padding: 0.8rem 1.5rem;
-            border-radius: 25px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(26, 32, 44, 0.2);
-            position: relative;
-            overflow: hidden;
-        }
-        .active{
-            background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(135, 206, 235, 0.4);
-        }
-
-        .nav-links button::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.5s ease;
-        }
-
-        .nav-links button:hover::before {
-            left: 100%;
-        }
-
-        .nav-links button:hover {
-            background: linear-gradient(135deg, #87ceeb 0%, #5dade2 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(135, 206, 235, 0.4);
-        }
-
-        .nav-links button:active {
-            transform: translateY(0);
-        }
-
-        /* Mobile Responsiveness */
-        @media (max-width: 768px) {
-            nav {
-                flex-direction: column;
-                gap: 1rem;
-                padding: 1rem;
-            }
-
-            .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
-            }
-
-            .logo div strong {
-                font-size: 1.5rem;
-            }
-
-            .nav-links li a {
-                padding: 0.5rem 0.8rem;
-                font-size: 0.9rem;
-            }
-
-            .nav-links button {
-                padding: 0.6rem 1.2rem;
-                font-size: 0.9rem;
-            }
-}
-        /* Main Content */
-        .main-container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .page-title {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            margin-bottom: 30px;
-            text-align: center;
-        }
-
-        .page-title h1 {
-            font-size: 32px;
-            color: black;
-            margin-bottom: 10px;
-        }
-
-        .page-title p {
-            color: #87ceeb;
-            font-size: 18px;
-        }
-
-        /* Account Layout */
-        .account-layout {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 30px;
-        }
-
-        /* Profile Summary Card */
-        .profile-summary {
-            background-color: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            height: fit-content;
-        }
-
-        .profile-avatar {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #87ceeb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 20px;
-            font-size: 48px;
-            color: white;
-            font-weight: bold;
-        }
-
-        .company-name {
-            font-size: 24px;
-            color: black;
-            font-weight: bold;
-            margin-bottom: 10px;
-        }
-
-        .company-type {
-            color: #87ceeb;
-            font-size: 16px;
-            margin-bottom: 20px;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-top: 25px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 15px;
-            background-color: #f9f9f9;
-            border-radius: 8px;
-        }
-
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #87ceeb;
-        }
-
-        .stat-label {
-            color: #666;
-            font-size: 14px;
-            margin-top: 5px;
-        }
-
-        /* Account Details Section */
-        .account-details {
-            background-color: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
-
-        .section-header {
-            background-color: #87ceeb;
-            color: white;
-            padding: 20px;
-            font-size: 20px;
-            font-weight: bold;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .btn-edit {
-            background-color: #87ceeb;
-            color: black;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .btn-edit:hover {
-            background-color: #62aac7ff;
-        }
-
-        .details-content {
-            padding: 30px;
-        }
-
-        .details-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 25px;
-            margin-bottom: 30px;
-        }
-
-        .detail-group {
-            border-bottom: 1px solid #eee;
-            padding-bottom: 20px;
-        }
-
-        .detail-group:last-child {
-            border-bottom: none;
-        }
-
-        .detail-label {
-            color: #87ceeb;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 8px;
-            text-transform: uppercase;
-        }
-
-        .detail-value {
-            color: black;
-            font-size: 16px;
-            font-weight: 500;
-        }
-
-        .detail-value.empty {
-            color: #999;
-            font-style: italic;
-        }
-        .detail-value input {
-            width: 100%;
-            padding: 6px 10px;
-             font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 6px;
-            background-color: #f9f9f9;
-             transition: border 0.3s, box-shadow 0.3s;
-        }
-
-        .detail-value input:focus {
-             border-color: #275d5cff;
-             box-shadow: 0 0 5px rgba(54, 219, 234, 0.5); 
-             outline: none;
-        }
-
-        footer {
-             background-color:#83A2B2;
-             color: white;
-            padding: 40px 0 20px;
-             margin-top: 50px;
-}
-
-.footer-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 0 20px;
-}
-
-.footer-content {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 40px;
-    margin-bottom: 30px;
-}
-
-.footer-section h3 {
-    color: #ffffff;
-    font-size: 20px;
-    margin-bottom: 20px;
-}
-
-.footer-section p,
-.footer-section li {
-    color: #e5f7ff;
-    line-height: 1.6;
-    margin-bottom: 10px;
-}
-
-.footer-section ul {
-    list-style: none;
-}
-
-.footer-section a {
-    color: #e5f7ff;
-    text-decoration: none;
-}
-
-.footer-section a:hover {
-    color: #87ceeb;
-}
-
-.social-links {
-    display: flex;
-    gap: 15px;
-    margin-top: 15px;
-}
-
-.social-links a {
-    background-color: #333;
-    color: white;
-    padding: 10px;
-    border-radius: 50%;
-    text-decoration: none;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.social-links a:hover {
-    background-color: #87ceeb;
-}
-
-.footer-bottom {
-    border-top: 1px solid #333;
-    padding-top: 20px;
-    text-align: center;
-}
-
-.footer-bottom p {
-    color: #dfdfdf;
-    margin: 0;
-}
-    </style>
+    <link rel="stylesheet" href="myaccountpage.css">
+    <link rel="stylesheet" href="../includes/navfooter.css">
 </head>
 <body>
-    <!-- Header -->
-  <header>
-    <nav>
-      <div class="logo">
-        <img src="../assets/images/logo2.png " height="50" width="50">
-        <div>
-          <strong>CareerConnect</strong>
-          <div class="tagline">Connecting Careers, Building Futures.</div>
-        </div>
-      </div>
-      
-      <ul class="nav-links">
-        <li><a href="companyhomepage.php" >Home</a></li>
-        <li><a href="postajob.php">Post a Job</a></li>
-        <li><a href="viewapplications.php">View Applications</a></li>
-        <li><a href="helpcompage.php">Help</a></li>
-        <li><a href="myaccountpage.php" class="active">My Account</a></li>
-        <button onclick="window.location.href='../login.php'">Log Out</button>
-      </ul>
+    <header>
+        <nav>
+            <div class="logo">
+                <img src="../assets/images/logo2.png " height="50" width="50">
+                <div>
+                    <strong>CareerConnect</strong>
+                    <div class="tagline">Connecting Careers, Building Futures.</div>
+                </div>
+            </div>
+            
+            <ul class="nav-links">
+                <li><a href="companyhomepage.php" >Home</a></li>
+                <li><a href="postajob.php">Post a Job</a></li>
+                <li><a href="viewapplications.php">View Applications</a></li>
+                <li><a href="helpcompage.php">Help</a></li>
+                <li><a href="myaccountpage.php" class="active">My Account</a></li>
+                <button onclick="window.location.href='../login.php'">Log Out</button>
+            </ul>
+        </nav>
+    </header>
 
-
-    </nav>
-  </header>
     <div class="main-container">
-        <!-- Page Title -->
         <div class="page-title">
             <h1>My Account</h1>
             <p>Manage your company profile and account settings</p>
         </div>
 
-        <!-- Success/Error Messages -->
         <div id="successMessage" class="message success-message"></div>
         <div id="errorMessage" class="message error-message"></div>
 
-       <!-- Account Layout -->
-<div class="account-layout">
-    <!-- Profile Summary -->
-    <div class="profile-summary">
-        <div class="profile-avatar">👤</div>
-        <div class="company-name"><?php echo htmlspecialchars($company['username']); ?></div>
-    </div>
+        <div class="account-layout">
+            <div class="profile-summary">
+                <div class="profile-avatar">👤</div>
+                <div class="company-name"><?php echo htmlspecialchars($company['username']); ?></div>
+            </div>
 
-    <!-- Account Details -->
-    <div class="account-details">
-        <div class="section-header">
-            Company Information
-        </div>
-
-        <div class="details-content">
-            <form method="POST">
-            <div class="details-grid">
-                <div class="detail-group">
-                    <div class="detail-label">Company Name</div>
-                    <div class="detail-value"><input type="text" name="full_name" value="<?php echo htmlspecialchars($company['full_name']); ?>"></div>
+            <div class="account-details">
+                <div class="section-header">
+                    Company Information
                 </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Industry</div>
-                    <div class="detail-value"><input type="text" name="industry" value="<?php echo htmlspecialchars($company['industry']); ?>"></div>
-                </div>
+                <div class="details-content">
+                    <form method="POST">
+                        <div class="details-grid">
+                            <div class="detail-group">
+                                <div class="detail-label">Company Name</div>
+                                <div class="detail-value"><input type="text" name="full_name" value="<?php echo htmlspecialchars($company['full_name']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Company Size</div>
-                    <div class="detail-value"><input type="text" name="company_size" value="<?php echo htmlspecialchars($company['company_size']); ?>"></div>
-                </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Industry</div>
+                                <div class="detail-value"><input type="text" name="industry" value="<?php echo htmlspecialchars($company['industry']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Founded</div>
-                    <div class="detail-value"><input type="text" name="founded" value="<?php echo htmlspecialchars($company['founded']); ?>"></div>
-                </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Company Size</div>
+                                <div class="detail-value"><input type="text" name="company_size" value="<?php echo htmlspecialchars($company['company_size']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Email Address</div>
-                    <div class="detail-value"><input type="email" name="email_address" value="<?php echo htmlspecialchars($company['email_address']); ?>"></div>
-                </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Founded</div>
+                                <div class="detail-value"><input type="text" name="founded" value="<?php echo htmlspecialchars($company['founded']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Phone Number</div>
-                    <div class="detail-value"><input type="text" name="phone_number" value="<?php echo htmlspecialchars($company['phone_number']); ?>"></div>
-                </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Email Address</div>
+                                <div class="detail-value"><input type="email" name="email_address" value="<?php echo htmlspecialchars($company['email_address']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Website</div>
-                    <div class="detail-value"><input type="text" name="website" value="<?php echo htmlspecialchars($company['website']); ?>"></div>
-                </div>
+                            <div class="detail-group">
+                                <div class="detail-label">Phone Number</div>
+                                <div class="detail-value"><input type="text" name="phone_number" value="<?php echo htmlspecialchars($company['phone_number']); ?>"></div>
+                            </div>
 
-                <div class="detail-group">
-                    <div class="detail-label">Location</div>
-                    <div class="detail-value"><input type="text" name="location" value="<?php echo htmlspecialchars($company['location']); ?>"></div>
+                            <div class="detail-group">
+                                <div class="detail-label">Website</div>
+                                <div class="detail-value"><input type="text" name="website" value="<?php echo htmlspecialchars($company['website']); ?>"></div>
+                            </div>
+
+                            <div class="detail-group">
+                                <div class="detail-label">Location</div>
+                                <div class="detail-value"><input type="text" name="location" value="<?php echo htmlspecialchars($company['location']); ?>"></div>
+                            </div>
+                        </div>
+                        <button class="btn-edit" onclick="editProfile()">Save</button>
+                    </form>
                 </div>
             </div>
-            <button class="btn-edit" onclick="editProfile()">Save</button>
-            </form>
         </div>
     </div>
-</div>
 
-    </div>
     <footer>
         <div class="footer-container">
             <div class="footer-content">
@@ -643,4 +180,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         </div>
     </footer>
 </body>
-</html>
+</html

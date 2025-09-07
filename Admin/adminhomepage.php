@@ -1,26 +1,19 @@
 <?php
-// 1. Include the database connection
-include 'db.php';
+require_once '../includes/config.php';
 
-// 2. Fetch data for the dashboard stats
-// Fetch total users
-$userResult = $conn->query("SELECT COUNT(*) as total FROM users");
+$userResult = $conn->query("SELECT COUNT(*) as total FROM users where role='USER';");
 $totalUsers = $userResult->fetch_assoc()['total'];
-
-// Fetch total companies (using the new 'companies' table)
-$companyResult = $conn->query("SELECT COUNT(*) as total FROM companies");
+$companyResult = $conn->query("SELECT COUNT(*) as total FROM users where role='company';");
 $totalCompanies = $companyResult->fetch_assoc()['total'];
-
-// Fetch total job listings
 $jobResult = $conn->query("SELECT COUNT(*) as total FROM jobs");
 $totalJobs = $jobResult->fetch_assoc()['total'];
-
-// Fetch total applications
 $applicationResult = $conn->query("SELECT COUNT(*) as total FROM applications");
 $totalApplications = $applicationResult->fetch_assoc()['total'];
-
 $conn->close();
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -28,16 +21,16 @@ $conn->close();
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Outer Web - Start Your Career</title>
   <link rel="stylesheet" href="adminhomepage.css">
+  <link rel="stylesheet" href="../includes/navfooter.css">
   <style>
     .banner-container {
       position: relative;
       width: 100%;
       overflow: hidden;
     }
-    
     .banner-container img {
       width: 100%;
-      height: auto;
+      height: 600px;
       display: block;
     }
     
@@ -81,6 +74,7 @@ $conn->close();
       font-weight: bold;
       color: #5dade2;
     }
+    
   </style>
 </head>
 <body>
@@ -94,7 +88,7 @@ $conn->close();
             </div>
         </div>
         <ul class="nav-links">
-            <li><a href="adminhomepage.php">Home</a></li>
+            <li><a href="adminhomepage.php" class="active">Home</a></li>
             <li><a href="manage_employees.php">Manage Employees</a></li>
             <li><a href="manage_companies.php">Manage Companies</a></li>
             <li><a href="help.html">Help</a></li>
@@ -132,5 +126,100 @@ $conn->close();
     </div>
   </div>
 
+  <!-- About Section -->
+   <div class="about-section" id="about">
+        <div class="about-container">
+            <div class="about-header">
+                <h2>About CareerConnect</h2>
+                <div class="about-subtitle">Your Gateway to Professional Success</div>
+            </div>
+            
+            <div class="about-text">
+                <p class="lead-text">
+                    At CareerConnect, we help people find great jobs and help companies find great employees. 
+                    Our platform makes job searching easy and fast for everyone.
+                </p>
+                
+                <div class="mission-vision">
+                    <div class="mission">
+                        <h3>Our Mission</h3>
+                        <p>To help people find jobs that match their skills and help companies find the right employees to grow their business.</p>
+                    </div>
+                    
+                    <div class="vision">
+                        <h3>Our Vision</h3>
+                        <p>To be the best job platform where everyone can find their perfect job and companies can find amazing employees.</p>
+                    </div>
+                </div>
+  </div>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h4>Smart Job Matching</h4>
+                    <p>We find jobs that match your skills and interests perfectly.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h4>Career Growth</h4>
+                    <p>Get help and training to grow in your career and get better jobs.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">🌐</div>
+                    <h4>Jobs Everywhere</h4>
+                    <p>Find jobs in your city or anywhere in the world with our global network.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h4>Easy Applications</h4>
+                    <p>Apply to many jobs quickly with just one click using your profile.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <footer>
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h3>About CareerConnect</h3>
+                    <p>We help people find great jobs and help companies find great employees. Join thousands of successful job seekers who found their dream careers with us.</p>
+                    <div class="social-links">
+                        <a href="#" title="Facebook">📘</a>
+                        <a href="#" title="Twitter">🐦</a>
+                        <a href="#" title="LinkedIn">💼</a>
+                        <a href="#" title="Instagram">📷</a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="companyhomepage.php">Home</a></li>
+                        <li><a href="postajob.php">Post Jobs</a></li>
+                        <li><a href="viewapplications.php">Applications</a></li>
+                        <li><a href="helpcompage.php">Help</a></li>
+                        <li><a href="myaccountpage.php">My Account</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Info</h3>
+                    <p>📧 Email: info@careerconnect.com</p>
+                    <p>📞 Phone: +94 81 233 3233</p>
+                    <p>📍 Address: CareerCon, Cross Street, Colombo, Srilanka<br>Job City, JC 12345</p>
+                    <p>🕒 Mon - Fri: 9:00 AM - 6:00 PM</p>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2025 CareerConnect. All rights reserved. | Privacy Policy | Terms of Service</p>
+            </div>
+        </div>
+    </footer>
 </body>
 </html>
