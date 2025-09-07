@@ -1,18 +1,38 @@
 <?php
 require_once '../includes/config.php';
 
-$username = $_SESSION['username'];  
+if (!isset($_SESSION['username'])) {
+    header("Location: ../login.php");
+    exit();
+}
 
+$username = $_SESSION['username'];
+
+// Fetch company details
 $sql = "SELECT * FROM company_details WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
 $stmt->execute();
 $result = $stmt->get_result();
-
 $company = $result->fetch_assoc();
 
+// Fetch user account details
+$sql2 = "SELECT * FROM users WHERE username = ?";
+$stmt2 = $conn->prepare($sql2);
+$stmt2->bind_param("s", $username);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$company2 = $result2->fetch_assoc();
+
+// Insert default record if company not found
+if (!$company) {
+    $conn->query("INSERT INTO company_details (username, full_name, email_address) 
+                  SELECT username, email FROM users WHERE username = '$username'");
+    $company = $conn->query("SELECT * FROM company_details WHERE username = '$username'")->fetch_assoc();
+}
+
+// Update details
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_SESSION['companyName'];
     $full_name = $_POST['full_name'];
     $industry = $_POST['industry'];
     $company_size = $_POST['company_size'];
@@ -38,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,8 +103,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="account-layout">
             <div class="profile-summary">
                 <div class="profile-avatar">👤</div>
-                <div class="company-name"><?php echo htmlspecialchars($company['username']); ?></div>
-            </div>
+                <div class="company-name">@ <?= htmlspecialchars($username); ?></div>
+                <div class="company-type"><?php echo $company2['role']; ?> Account</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number"><?php echo $company2['user_id']; ?></div>
+                        <div class="stat-label">User ID</div>
+                    </div>
+                    <div class="stat-item" style="font-size: 1px;">
+                        <div class="stat-number"><?php echo $company2['created_at']; ?></div>
+                        <div class="stat-label">Date Joined</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number"><?= htmlspecialchars($company['location']); ?></div>
+                        <div class="stat-label">Location</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">Company</div>
+                        <div class="stat-label">Role</div>
+                    </div>
+                </div>
+        </div>
 
             <div class="account-details">
                 <div class="section-header">

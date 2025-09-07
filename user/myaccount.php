@@ -8,6 +8,7 @@ if (!isset($_SESSION['username'])) {
 
 $username = $_SESSION['username'];
 
+// 1. Fetch from emp_details
 $sql = "SELECT * FROM emp_details WHERE username = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("s", $username);
@@ -15,12 +16,31 @@ $stmt->execute();
 $result = $stmt->get_result();
 $employee = $result->fetch_assoc();
 
-if (!$employee) {
-    $conn->query("INSERT INTO emp_details (username, full_name, email_address) 
-                  SELECT username, email FROM users WHERE username = '$username'");
-    $employee = $conn->query("SELECT * FROM emp_details WHERE username = '$username'")->fetch_assoc();
+// 2. Fetch from users (FIXED - use $sql2, $stmt2)
+$sql2 = "SELECT * FROM users WHERE username = ?";
+$stmt2 = $conn->prepare($sql2);
+$stmt2->bind_param("s", $username);
+$stmt2->execute();
+$result2 = $stmt2->get_result();
+$employee2 = $result2->fetch_assoc();
+
+// 3. If emp_details doesn't exist, create it
+if (!$employee && $employee2) {
+    $insert = $conn->prepare("
+        INSERT INTO emp_details (username, full_name, email_address) 
+        VALUES (?, ?, ?)
+    ");
+    $insert->bind_param("sss", $employee2['username'], $employee2['full_name'], $employee2['email']);
+    $insert->execute();
+
+    // re-fetch
+    $stmt = $conn->prepare("SELECT * FROM emp_details WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $employee = $stmt->get_result()->fetch_assoc();
 }
 
+// 4. Handle profile update
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $full_name = $_POST['full_name'];
     $email_address = $_POST['email_address'];
@@ -46,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -89,9 +110,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <div class="account-layout">
       <div class="profile-summary">
-        <div class="profile-avatar">👤</div>
-        <div class="company-name"><?= htmlspecialchars($username); ?></div>
-      </div>
+                <div class="profile-avatar">👤</div>
+                <div class="company-name">@ <?= htmlspecialchars($username); ?></div>
+                <div class="company-type"><?php echo $employee2['role']; ?> Account</div>
+                
+                <div class="profile-stats">
+                    <div class="stat-item">
+                        <div class="stat-number"><?php echo $employee2['user_id']; ?></div>
+                        <div class="stat-label">User ID</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number"><?php echo $employee2['created_at']; ?></div>
+                        <div class="stat-label">Date Joined</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number"><?= htmlspecialchars($employee['location']); ?></div>
+                        <div class="stat-label">Location</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">User</div>
+                        <div class="stat-label">Role</div>
+                    </div>
+                </div>
+        </div>
 
       <div class="account-details">
         <div class="section-header">User Information</div>
